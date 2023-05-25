@@ -1,0 +1,43 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn install
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/sbin:/usr/sbin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.2.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: EPERM: operation not permitted, symlink '../../../mime/cli.js' -> '/home/demo/Live-usb-storage/TCC1/server/node_modules/send/node_modules/.bin/mime'
+
+npm manifest: 
+  {
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "body-parser": "^1.20.2",
+      "cors": "^2.8.5",
+      "express": "^4.18.2",
+      "mysql": "^2.18.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
