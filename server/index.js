@@ -31,7 +31,7 @@ App.post('/api/DeleteRegisters', (req,res) => {
 
 App.post('/api/InsertRegister', (req,res) =>{
     const nome = req.body.name;
-    const passw = req.body.passw;
+    const passw = req.body.passwd;
 
     const sqlInsert = "INSERT INTO User1 (Nome, Passw) VALUES (?,?)";
     db.query(sqlInsert, [nome,passw], (err,result) =>{
@@ -41,11 +41,33 @@ App.post('/api/InsertRegister', (req,res) =>{
 })
 
 App.get("/api/GetRegisters", (req , res) => {
-    const SqlSelect = "SELECT * FROM user";
+    const SqlSelect = "SELECT * FROM User1";
     db.query(SqlSelect, (err,result) => {
-        res.send(result)
+        if (res.result === null) {
+            res.send(false)
+        }
+        else {
+            res.send(result)
+        }
     })
 })
+
+App.post("/api/SelectRegister", (req , res) => {
+    const name = req.body.name;
+    const passw = req.body.passwd;
+    const SqlSelect = "SELECT * FROM User1 where Nome = ? and Passw = ?";
+    db.query(SqlSelect, [name, passw] , (err,result) => {
+        if (result.length === 0) {
+            console.log("nada encontrado")
+            res.send(false)
+        }else{
+            console.log("encontrou")
+            res.send(true)
+        }
+        
+    })
+})
+
 
 App.post("/api/UpdateRegisters", (req,res) => {
     const nome = req.body.nome;
