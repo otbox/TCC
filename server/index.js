@@ -62,7 +62,7 @@ App.post("/api/SelectRegister", (req , res) => {
             res.send(false)
         }else{
             console.log("encontrou")
-            res.send(true)
+            res.send(result)
         }
         
     })

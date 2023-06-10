@@ -1,4 +1,8 @@
 import axios from "axios"
+import { useState } from "react";
+import { UserType } from "../shared/types/UserType";
+import { useAppDispatch, useAppSelector } from "../pages/hooks";
+import { setUserAction } from "../shared/Store/reducers/userReducer";
 
 interface ApiProps {
     id?: number;
@@ -6,6 +10,8 @@ interface ApiProps {
     passwd?: string; 
     address: string;
 }
+
+
 
 export const ReceiveAccounts = async (props : ApiProps) => {
     return await axios.get(props.address + "getRegisters");
@@ -30,25 +36,29 @@ export const RemoveAccount = async (props: ApiProps) => {
     )
 }
 
-export const isLoginAccount = async (props: ApiProps): Promise<boolean> => {
+export const isLoginAccount = (props: ApiProps): Promise<UserType> => {
     const { address, name, passwd } = props;
-  
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<UserType>((resolve, reject) => {
       axios
-        .post("http://localhost:3001/api/SelectRegister", {
+        .post(address + "SelectRegister", {
           name,
           passwd,
         })
         .then((response) => {
           if (!response.data) {
-            resolve(false);
+            reject(-1);
           } else {
-            resolve(true);
+            const user1: UserType = {
+              id: response.data[0].id,
+              name: response.data[0].Nome,
+              passwd: response.data[0].Passw,
+            };
+            resolve(user1);
           }
         })
         .catch((error) => {
           console.error(error);
-          resolve(false);
+          reject(-1);
         });
     });
   };
