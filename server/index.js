@@ -33,7 +33,7 @@ App.post('/api/InsertRegister', (req,res) =>{
     const nome = req.body.name;
     const passw = req.body.passwd;
 
-    const sqlInsert = "INSERT INTO User1 (Nome, Passw) VALUES (?,?)";
+    const sqlInsert = "INSERT INTO user1 (Nome, Passw) VALUES (?,?)";
     db.query(sqlInsert, [nome,passw], (err,result) =>{
         console.log(result);
         console.log(err);
@@ -41,7 +41,7 @@ App.post('/api/InsertRegister', (req,res) =>{
 })
 
 App.get("/api/GetRegisters", (req , res) => {
-    const SqlSelect = "SELECT * FROM User1";
+    const SqlSelect = "SELECT * FROM user1";
     db.query(SqlSelect, (err,result) => {
         if (res.result === null) {
             res.send(false)
@@ -55,7 +55,7 @@ App.get("/api/GetRegisters", (req , res) => {
 App.post("/api/SelectRegister", (req , res) => {
     const name = req.body.name;
     const passw = req.body.passwd;
-    const SqlSelect = "SELECT * FROM User1 where Nome = ? and Passw = ?";
+    const SqlSelect = "SELECT * FROM user1 where Nome = ? and Passw = ?";
     db.query(SqlSelect, [name, passw] , (err,result) => {
         if (result.length === 0) {
             console.log("nada encontrado")
