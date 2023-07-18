@@ -9,24 +9,23 @@ import { useAppDispatch, useAppSelector } from './hooks';
 import { counterSlice, decrement, increment, incrementByAmount, selectCount } from '../shared/Store/reducers/globalReducer';
 import userReducer, { SelectUser, setUserAction } from '../shared/Store/reducers/userReducer';
 import { UserType } from '../shared/types/UserType';
+import ApiVerify from '../components/ApiVerify';
+import { useNavigation } from '@react-navigation/native';
 
 
-export default function Login({navigation}) {
+export default function Login() {
+  const navigation = useNavigation();
   const [Name, SetName] = useState<string>("");
   const [Senha, SetSenha] = useState<string>("");
   const [Logged, SetLogged] = useState<boolean>()
 
-  let address1 = 'http://192.168.1.106:3001/api/';
-  let address2 = 'http://localhost:3001/api/'
-
-  let address = Platform.OS !== 'web' ? address1 : address2;
   const dispatch = useAppDispatch();
   const Receive = () => {
     console.log(axios.get('http://localhost:3001/api/GetRegisters'))
   }
   
   const Logando = () => {
-    isLoginAccount({address: address, name:Name, passwd:Senha}).then((result) => {
+    isLoginAccount({address: ApiVerify(), name:Name, passwd:Senha}).then((result) => {
       dispatch(setUserAction(result));
       navigation.navigate('Home');
     }).catch(() => console.log("não encontrado"));
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor: '#fff',
+    backgroundColor: '#F0F2EF',
     alignItems:'center',
   },
   header: {
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   button: {
-    color:'##7FFFD4',
+    color:'#7FFFD4',
     width: 100,
     height: 100,
   }

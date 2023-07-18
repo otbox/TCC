@@ -8,7 +8,7 @@ const db = mysql.createPool({
     host: 'localhost',
     user: 'root', 
     password: '',
-    database: 'teste'
+    database: 'aquitans'
 })
 
 App.use(cors());
@@ -37,6 +37,25 @@ App.post('/api/InsertRegister', (req,res) =>{
     db.query(sqlInsert, [nome,passw], (err,result) =>{
         console.log(result);
         console.log(err);
+    })
+})
+
+App.post("/api/GetEstufaProfile", (req, res) => {
+    const idEstufa = req.body.idEstufa;
+    const SqlSelect = "Select * from historico where fk_idEstufa = ? order BY Momento ASC";
+    db.query(SqlSelect, [idEstufa],(err, result) => {
+        console.log("Novo Acesso");
+        console.log(result)
+        console.log(err)
+        res.send(result);
+    })
+})
+
+App.get("/api/GetEstufas", (req , res) => {
+    const SqlSelect = "SELECT * FROM estufa";
+    db.query(SqlSelect, (err,result) => {
+        res.send(result)
+        console.log(err)
     })
 })
 
