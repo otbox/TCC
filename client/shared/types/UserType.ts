@@ -1,5 +1,8 @@
 export interface UserType {
     id: number;
-    name: string;
-    passwd: string;
+    idEmpresa: number;
+    nivel: number;
+    name?: string;
+    ativo: number;
+    senha?: string;
 }

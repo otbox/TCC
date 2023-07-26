@@ -19,10 +19,11 @@ export default function Home() {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     useEffect(() => {
-        axios.get(ApiVerify() +'GetEstufas').then((response) => {
+        axios.post(ApiVerify() +'GetEstufas', {
+            idEmpresa: bb?.idEmpresa,
+        }).then((response) => {
             SetEstufas(response.data)
             setCurrentDate(new Date());
-            console.log(currentDate)
         })
     }, [Reload])
 
@@ -34,21 +35,17 @@ export default function Home() {
                     <Text>User:</Text>
                     <Text>{bb?.id}</Text>
                     <Text>{bb?.name}</Text>
-                    <Text>{bb?.passwd}</Text>
+                    {/* <Text>{bb?.ativo}</Text> */}
+                    <Text>{bb?.idEmpresa}</Text>
+                    <Text>{bb?.nivel}</Text>
+                    <Text>{bb?.ativo}</Text> 
                     {Array.isArray(Estufas) && Estufas.map((data) => {
                         return(
-                            <EstufaButton key={data.idEstufa} idEstufa={data.idEstufa} nome={data.Nome} temp={data.TempAlvo} umid={data.UmiAlvo}/>
+                            <EstufaButton DiasCultivo={data.DiasCultivo} Status={data.Status} key={data.idEstufa} idEstufa={data.idEstufa} nome={data.Nome} temp={data.TempAlvo} umid={data.UmiAlvo}/>
                         ) 
                     })}
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
-                    <EstufaButton idEstufa={1} nome={"teste"} temp={36}/>
+                    <EstufaButton Status={1} idEstufa={3} nome={"teste"} temp={36}/>
+
                 </View>
             </ScrollView>
         </SafeAreaView>

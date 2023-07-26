@@ -49,16 +49,21 @@ export const isLoginAccount = (props: ApiProps): Promise<UserType> => {
             reject(-1);
           } else {
             const user1: UserType = {
-              id: response.data[0].id,
+              id: response.data[0].idUsuarios,
               name: response.data[0].Nome,
-              passwd: response.data[0].Passw,
+              nivel: response.data[0].Nivel,
+              senha: response.data[0].Senha,
+              ativo: response.data[0].Ativo.data,
+              idEmpresa: response.data[0].fk_idEmpresa_u,
             };
+            console.log(user1.ativo)
+            if(user1.ativo == 0){reject(-2)}
             resolve(user1);
           }
         })
         .catch((error) => {
           console.error(error);
-          reject(-1);
+          reject(-3);
         });
     });
   };

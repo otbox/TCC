@@ -51,10 +51,12 @@ App.post("/api/GetEstufaProfile", (req, res) => {
     })
 })
 
-App.get("/api/GetEstufas", (req , res) => {
-    const SqlSelect = "SELECT * FROM estufa";
-    db.query(SqlSelect, (err,result) => {
+App.post("/api/GetEstufas", (req , res) => {
+    const idEmpresa = req.body.idEmpresa;
+    const SqlSelect = "SELECT * FROM estufa where fk_idEmpresa = ?";
+    db.query(SqlSelect,[idEmpresa],(err,result) => {
         res.send(result)
+        console.log(result)
         console.log(err)
     })
 })
@@ -74,14 +76,18 @@ App.get("/api/GetRegisters", (req , res) => {
 App.post("/api/SelectRegister", (req , res) => {
     const name = req.body.name;
     const passw = req.body.passwd;
-    const SqlSelect = "SELECT * FROM user1 where Nome = ? and Passw = ?";
+    const SqlSelect = "SELECT * FROM usuarios where Nome = ? and Senha = ?";
     db.query(SqlSelect, [name, passw] , (err,result) => {
-        if (result.length === 0) {
-            console.log("nada encontrado")
-            res.send(false)
-        }else{
+        if (err) {
+            console.log(result)
+            console.log(err)
+        }
+        if (result && result.length !== 0) {
             console.log("encontrou")
             res.send(result)
+        }else{
+            console.log("nada encontrado" + result)
+            res.send(false)
         }
         
     })

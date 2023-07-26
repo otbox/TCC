@@ -14,9 +14,9 @@ export default function App () {
     <Provider store = {store}>
       
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={{headerTintColor: 'white', headerStyle: {backgroundColor: '#AFD5AA'}, animation:"default"}}>
+        <Stack.Navigator initialRouteName="Login" screenOptions={{headerTintColor: 'white', headerStyle: {backgroundColor: '#AFD5AA'}, animation:"default", headerLeft: undefined}}>
           <Stack.Screen name = "Login" component={Login}/>
-          <Stack.Screen name = "Home" component={Home} options = {{gestureEnabled: false, headerLeft: null}}/>
+          <Stack.Screen name = "Home" component={Home} options = {{gestureEnabled: false, headerBackVisible: false}}/>
           <Stack.Screen name = "EstufaProfile" component={EstufaProfile}/>
         </Stack.Navigator>
       </NavigationContainer>

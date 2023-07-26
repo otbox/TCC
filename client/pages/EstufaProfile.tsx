@@ -30,7 +30,9 @@ export default function EstufaProfile({route}) {
     const [Temp, setTemp] = useState<number[]>([]);
     const [TempMax, setTempMax] = useState<number>();
     const [dadosGraf, setDadosGraf] = useState<any[]>([])
-    const {nome} = route.params;
+    const {ultTemp0, ultUmid0,nome, diasCultivo} = route.params;
+    const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
+    const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
     useEffect(() => {
        axios.post(ApiVerify() +'GetEstufaProfile',{idEstufa: route.params.idEstufa}).then((response) => {
           const dados = response.data;
@@ -42,12 +44,14 @@ export default function EstufaProfile({route}) {
           setTempMax(tempMax);
           const pag = dados.length - 5 
           setPag(pag)
+          const ultDado = dados[dados.length - 1] 
+          setUltTemp(ultDado.Temp)
+          setUltUmid(ultDado.Umi)
           setLoaded(true)
        }).catch((error) => {console.log(error)})
        navigation.setOptions({
         title: "Estufa: " + nome,
        })
-
        setCurrentDate(new Date());
     },[Reload])
 
@@ -110,8 +114,24 @@ export default function EstufaProfile({route}) {
           <ScrollView>
           <UltAttNoti UltimaData={currentDate} OnClick={() => SetReload(Reload + 1)} navigation={navigation}/>
             <View style = {{flexDirection: "row", height: 150, marginHorizontal: 5, justifyContent: "space-between"}}>
-              <Paper style={{flex: 1}}></Paper>
-              <Paper style={{flex: 1}}></Paper>
+              <Paper style={{flex: 1, padding: 10}}>
+
+                <Text></Text>  
+              </Paper>
+              <View>
+                <Paper style={{flex: 1, padding: 14}}>
+                  <Text style= {{marginTop: -5}}>Ultima Atualização:</Text>
+                  <View style= {{marginTop: 5, flexDirection: "row", justifyContent: "space-around"}}>
+                    <Text style = {{color:'#ffa500', fontSize: 20}}>  {ultTemp}ºC</Text>
+                    <Divider />
+                    <Text style = {{color:'#4CC1DE', fontSize: 20}}> {ultUmid}% </Text> 
+                  </View>
+                </Paper>
+                <Paper style={{flex: 1, padding: 3, flexDirection: "row", justifyContent: "space-around"}}>
+                  <Text style= {{fontSize: 15, alignSelf: "center"}}>Dias de {"\n"}Cultivo:</Text>
+                  <Text style= {{fontSize: 28, alignSelf: "center"}}>{diasCultivo}</Text>
+                </Paper>
+              </View>
             </View>
             
             <Paper style={{height: 500}}>
@@ -155,24 +175,29 @@ export default function EstufaProfile({route}) {
                     <View>
                     <Text style = {{fontWeight: "bold"}}>Ultimos Registros: </Text>
                     <ScrollView style = {{height: 300, backgroundColor: 'aliceblue'}} >
-                          {dados.map((data) =>(
-                          <View style = {{flexDirection:"row"}}>
-                            <Text>{new Date(data.Momento).toLocaleString([], {day: "2-digit", month:"2-digit"})}</Text>
+                          {dados.map((data, index) =>(
+                          <View key={index} style = {{flexDirection:"row"}}>
+                            <Text style = {style.dados}>{new Date(data.Momento).toLocaleString([], {day: "2-digit", month:"2-digit"})}</Text>
                             <Divider />
-                            <Text>{new Date(data.Momento).toLocaleTimeString([],{hour: "2-digit", minute: "2-digit"})}</Text>
+                            <Text style = {style.dados}>{new Date(data.Momento).toLocaleTimeString([],{hour: "2-digit", minute: "2-digit"})}</Text>
                             <Divider />
-                            <Text>{data.Temp}</Text>
+                            <Text style = {style.dados}>{data.Temp}ºC</Text>
+                            <Divider />
+                            <Text style = {style.dados}>{data.Umi}%</Text>
                           </View>))}
                     </ScrollView>
                   </View>
                 </Swiper>
-                ) : (<Text>Loading...</Text>)}
-                   
-
+                ) : (<Text>Loading...</Text>)}                
             </Paper>
-            
           </ScrollView>
         </SafeAreaView>
     )
 };
 
+const style = StyleSheet.create({
+  dados: {
+    flex:1, 
+    textAlign:"center",
+  }
+})

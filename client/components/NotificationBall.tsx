@@ -2,19 +2,21 @@ import { View } from "react-native";
 import { useState, useEffect } from 'react';
 
 
-type NotificationBallProps = {
-    Status : "Safe" | "Warning" | "Problem"
+export type NotificationBallProps = {
+    Status : "Working" | "Suspended" | "Off" | "Maintenance"
 } 
 
 export default function NotificationBall({Status} : NotificationBallProps) {
     const [color, setColor] = useState<string>()
     useEffect(() => {
-        if (Status === "Safe")
+        if (Status === "Working")
           setColor('rgba(0, 128, 0, 1)');
-        else if (Status === "Warning")
+        else if (Status === "Suspended")
           setColor('rgba(255, 173, 45, 1)');
-        else if (Status === "Problem")
+        else if (Status === "Off")
           setColor('rgba(255, 0, 0, 1)');
+        else if (Status === "Maintenance")
+          setColor('rgba(0, 0, 0, 0.4)');
       }, [Status]);
 
     return(

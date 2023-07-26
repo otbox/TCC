@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, Image, Pressable, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
-import NotificationBall from "./NotificationBall";
+import NotificationBall, { NotificationBallProps } from "./NotificationBall";
 import Paper from "./Paper";
+import { useState, useEffect } from "react";
 
 interface EstufaProps {
     onClick? : () => void, 
@@ -10,27 +11,45 @@ interface EstufaProps {
     temp? : Number,
     umid? : Number, 
     idEstufa : Number,
+    Status?: Number,
+    DiasCultivo?: Number,
 }
 
-export default function EstufaButton(props : EstufaProps) {
-    const {nome , temp, umid, caution, onClick, idEstufa} = props;
-
+export default function EstufaButton({nome , temp, umid, caution, onClick, idEstufa, Status, DiasCultivo} : EstufaProps) {
     const navigation = useNavigation();
+    const [StatusBall, setStatusBall] = useState<NotificationBallProps>({Status: "Maintenance"})
     const AcessandoEstufa = () => {
-        navigation.navigate("EstufaProfile", {idEstufa: props.idEstufa, nome: props.nome});
+        navigation.navigate("EstufaProfile", {idEstufa: idEstufa, nome: nome, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid});
     }
-
+    
+    useEffect(() => {
+        switch(Status){
+            case 0:
+                setStatusBall({Status: "Off"})
+            break
+            case 1:
+                setStatusBall({Status: "Working"})
+            break
+            case 2:
+                setStatusBall({Status: "Suspended"})
+            break
+            case 3:
+                setStatusBall({Status: "Maintenance"})
+            break
+        }
+    }, [Status])
+    
     return (
         <TouchableOpacity onPress={AcessandoEstufa}> 
             <Paper style={style.constainer}>
-                <NotificationBall Status="Safe"/>
+                <NotificationBall Status={StatusBall.Status}/>
                 <Image source={require('../assets/estufa.png')} style = {{width: 100 , height: 100}} />
                 {/* <Text> {nome}</Text> */}
                 <Text style = {{color: '#708090', alignSelf:"center", fontSize:25, marginLeft: 10}}>{nome}</Text>
-                <View style= {{flex: 1 , flexDirection:"row-reverse", alignSelf:"flex-end", marginRight: 20, alignContent: "space-between"}}>
+                <View style= {{flex: 1 , flexDirection:"column-reverse",marginLeft: 90}}>
                     {/* <View style = {style.termo}><View style= {style.ponta}></View> </View> */}
-                    <Text style = {{color:'#b2dfee', fontSize: 20}}> {umid}% </Text> 
                     <Text style = {{color:'#ffa500', fontSize: 20}}>  {temp}ºC</Text>
+                    <Text style = {{color:'#4CC1DE', fontSize: 20}}> {umid}% </Text> 
                 </View>
             </Paper>
         </TouchableOpacity>  
