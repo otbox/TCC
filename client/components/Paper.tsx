@@ -18,10 +18,11 @@ const style1 = StyleSheet.create({
     paper: {
         backgroundColor:'white',
         shadowColor: 'black',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        //shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 10,
         borderRadius: 10,
-        margin: 10
+        margin: 10,
+        elevation: 2,
     }
 })

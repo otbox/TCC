@@ -10,6 +10,9 @@ import { Button } from "react-native";
 import ApiVerify from "../components/ApiVerify";
 import { ScrollView } from "react-native";
 import UltAttNoti from "../components/UltAttNoti";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
     const navigation = useNavigation();
@@ -26,6 +29,25 @@ export default function Home() {
             setCurrentDate(new Date());
         })
     }, [Reload])
+
+    const LogOut = async () => {
+        try {
+            await AsyncStorage.removeItem("key");
+            navigation.goBack();
+        }catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity style= {{marginRight: 20}} onPress={LogOut}>
+                    <Ionicons name="exit" size={32} color="white" />
+                </TouchableOpacity>
+            )
+        });
+    },[navigation]) 
 
     return (
         <SafeAreaView>

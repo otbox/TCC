@@ -62,6 +62,7 @@ const style = StyleSheet.create({
         height: 100,
         flexDirection:"row",
         marginBottom: 15,
+        elevation: 0,
     },
     termo: {
         width: 10, 

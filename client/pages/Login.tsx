@@ -10,6 +10,7 @@ import ApiVerify from '../components/ApiVerify';
 import { useNavigation } from '@react-navigation/native';
 import Checkbox from '../components/Checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TextInput2 from '../components/TextInput2';
 
 
 export default function Login() {
@@ -30,6 +31,16 @@ export default function Login() {
   }
 },[LoadedData])
 
+useEffect(() => {
+  console.log(Senha)
+},[Senha])
+  useEffect(() => {
+   if(LoadedData){
+      SetName("");
+      SetSenha("");
+
+   } 
+  }, [navigation])
   const Savelogin = async (Name : string, Senha: string) => {
     if (Save){
       try {
@@ -78,31 +89,15 @@ const GetLogin = async () => {
   
   return (
     <View style={styles.container}>
-        <View style= {{marginTop:40, height: 300, width: '100%',justifyContent:'space-between', alignItems:'center'}}>
-          <View style= {{marginTop:40, height: 300, width: '100%',justifyContent:'space-between', alignItems:'center'}}>
-          <TextInput
-            style={{height: 40,
-              width: "70%",
-              borderWidth: 1,}}
-            placeholder="Nome"
-            keyboardType="ascii-capable"
-            onChangeText={(e) =>SetName(e)}
-          />
-          <TextInput
-          style={{height: 40,
-            width: "70%",
-            borderWidth: 1,}}
-          placeholder="Senha"
-          keyboardType="ascii-capable"
-          onChangeText={(e) => SetSenha(e)}
-        />
+        <View style= {{marginTop:40, height: '100%', width: '100%',justifyContent:'space-around', alignItems:'center'}}>
+            <TextInput2 onChange1={SetName} placeholder='Usuário'></TextInput2>
+            <TextInput2 onChange1={SetSenha} placeholder='Senha'></TextInput2>
+          <Text style = {{marginVertical: 10}}>{Erros}</Text>
+          <Checkbox onChange={SetSave} changed={Save} texto='Lembrar'/> 
+          {/* <Button2 height={110} width={110} label={"Criar"} onClick={() => CreateAccount({address: ApiVerify(), name:Name, passwd:Senha})}/> */}
+          <Button2 height={110} width={110} label={"Entrar"} onClick={() => Logando()}/>
         </View>
-        <Text style = {{marginVertical: 10}}>{Erros}</Text>
-        <Checkbox onChange={SetSave} changed={Save} texto='Lembrar'/> 
-        <Button2 height={110} width={110} label={"Criar"} onClick={() => CreateAccount({address: ApiVerify(), name:Name, passwd:Senha})}/>
-        <Button2 height={110} width={110} label={"Entrar"} onClick={() => Logando()}/>
-        <Button2 height={110} width={110} label={"Entrar"} onClick={() => GetLogin()}/>
-        </View>
+        <Text style = {{color: 'gray'}}>By Otbox</Text>
         <StatusBar style="auto" />
     </View>
   );
@@ -111,7 +106,7 @@ const GetLogin = async () => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "100%",
+    height: "90%",
     alignItems:'center',
   },
   header: {

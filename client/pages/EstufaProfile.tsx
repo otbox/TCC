@@ -10,6 +10,8 @@ import UltAttNoti from "../components/UltAttNoti";
 import { useNavigation } from "@react-navigation/native";
 import Divider from "../components/Divider";
 import Swiper from "react-native-swiper";
+import { Button2 } from "../components/Button2";
+import PdfPageGenerator from "../components/PdfPageGenerator";
 
 interface EstufaPropsProf {
     caution? : Number,
@@ -115,7 +117,8 @@ export default function EstufaProfile({route}) {
           <UltAttNoti UltimaData={currentDate} OnClick={() => SetReload(Reload + 1)} navigation={navigation}/>
             <View style = {{flexDirection: "row", height: 150, marginHorizontal: 5, justifyContent: "space-between"}}>
               <Paper style={{flex: 1, padding: 10}}>
-
+                {loaded ? (<Button2 height={100} width={100} onClick={() => PdfPageGenerator({data: dados, nomeEstufa: nome})} label={"PDFGerator"}/>) : (<Text>Loading...</Text>)}
+                
                 <Text></Text>  
               </Paper>
               <View>
@@ -173,7 +176,7 @@ export default function EstufaProfile({route}) {
                       </View>
                     </View>
                     <View>
-                    <Text style = {{fontWeight: "bold"}}>Ultimos Registros: </Text>
+                    <Text style = {{fontWeight: "bold", margin:10}}>Ultimos Registros: </Text>
                     <ScrollView style = {{height: 300, backgroundColor: 'aliceblue'}} >
                           {dados.map((data, index) =>(
                           <View key={index} style = {{flexDirection:"row"}}>
