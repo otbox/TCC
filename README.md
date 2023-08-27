@@ -1,4 +1,4 @@
-# Movile-Estufa-Manager
+# Mobile-Estufa-Manager
 
 Projeto que consiste em app, que serve para gerenciar estufas, vendo a tempertura e umiddade com base no banco de dados MySQL
 
