@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View} from 'react-native';
+import { StyleSheet, TextInput, View} from 'react-native';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Button2 } from '../components/Button2';
@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import Checkbox from '../components/Checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TextInput2 from '../components/TextInput2';
-
+import Text1 from '../components/Text';
 
 export default function Login() {
   const navigation = useNavigation();
@@ -90,14 +90,14 @@ const GetLogin = async () => {
   return (
     <View style={styles.container}>
         <View style= {{marginTop:40, height: '100%', width: '100%',justifyContent:'space-around', alignItems:'center'}}>
-            <TextInput2 onChange1={SetName} placeholder='Usuário'></TextInput2>
-            <TextInput2 onChange1={SetSenha} placeholder='Senha'></TextInput2>
-          <Text style = {{marginVertical: 10}}>{Erros}</Text>
+            <TextInput2 icon='person-outline' onChange1={SetName} placeholder='Usuário'></TextInput2>
+            <TextInput2 icon='key-outline' onChange1={SetSenha} placeholder='Senha'></TextInput2>
+          <Text1 style = {{marginVertical: 10}}>{Erros}</Text1>
           <Checkbox onChange={SetSave} changed={Save} texto='Lembrar'/> 
           {/* <Button2 height={110} width={110} label={"Criar"} onClick={() => CreateAccount({address: ApiVerify(), name:Name, passwd:Senha})}/> */}
           <Button2 height={110} width={110} label={"Entrar"} onClick={() => Logando()}/>
         </View>
-        <Text style = {{color: 'gray'}}>By Otbox</Text>
+        <Text1 style = {{color: 'gray'}}>By Otbox</Text1>
         <StatusBar style="auto" />
     </View>
   );

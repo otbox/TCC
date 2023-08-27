@@ -1,20 +1,26 @@
+import { Ionicons } from "@expo/vector-icons";
+import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     onChange1 : React.Dispatch<React.SetStateAction<string>>
+    icon?: string;
   }
 
     const TextInput2 : React.FC<TextInputProps> = (props)  => {
-        const {placeholder, onChange1} = props     
+        const {placeholder, onChange1, icon} = props     
     return (
-        <TextInput 
-            style = {styleInput.input} 
-            cursorColor={'#AFD5AA'}
-            // placeholderTextColor={'#90EE90'}
-            placeholder={placeholder}
-            onChangeText = {(e) => onChange1(e)}
-        />
+        <View style = {{flexDirection: "row"}}>
+            <Ionicons name={icon} size={24} color={"gray"} style = {{alignSelf: "center", marginRight: 5}}/>
+            <TextInput 
+                style = {styleInput.input} 
+                cursorColor={'#AFD5AA'}
+                // placeholderTextColor={'#90EE90'}
+                placeholder={placeholder}
+                onChangeText = {(e) => onChange1(e)}
+            />
+         </View>
     );
 };
 export default TextInput2;

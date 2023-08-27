@@ -1,6 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState} from "react"
-import { TouchableOpacity , Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Text1 from './Text';
 
 type checkboxProps = {
     onChange: React.Dispatch<React.SetStateAction<boolean>>,
@@ -20,7 +21,7 @@ export default function Checkbox({changed, texto , onChange} : checkboxProps) {
             :
             (<MaterialIcons name="check-box-outline-blank" size={24} color="black" />)   
         }   
-        <Text style = {{alignSelf: 'center'}}>{texto}</Text> 
+        <Text1 style = {{alignSelf: 'center'}} fontWeight={0}>{texto}</Text1> 
         </TouchableOpacity>
     )
 };                                                                                                                      

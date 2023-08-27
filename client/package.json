@@ -29,6 +29,7 @@
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.18.11",
     "react-redux": "^8.0.5",
+    "victory": "^36.6.11",
     "victory-native": "^36.6.11"
   },
   "devDependencies": {

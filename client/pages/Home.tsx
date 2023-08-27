@@ -13,6 +13,7 @@ import UltAttNoti from "../components/UltAttNoti";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Text1 from "../components/Text";
 
 export default function Home() {
     const navigation = useNavigation();
@@ -54,7 +55,7 @@ export default function Home() {
             <ScrollView style ={{paddingHorizontal: 5}}>
                 <UltAttNoti UltimaData={currentDate} navigation={navigation} OnClick={() => SetReload(Reload + 1)}/>
                 <View style = {{backgroundColor: '#F0F2EF'}}>
-                    <Text>User:</Text>
+                    <Text1 fontWeight={1}>User:</Text1>
                     <Text>{bb?.id}</Text>
                     <Text>{bb?.name}</Text>
                     {/* <Text>{bb?.ativo}</Text> */}
