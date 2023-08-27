@@ -2,6 +2,8 @@
 
 Projeto que consiste em app, que serve para gerenciar estufas, vendo a tempertura e umiddade com base no banco de dados MySQL
 
+Adendo este projeto faz parte de um maior com a utilização de arduino e uma plataforma Desktop para a administração dos usuários e das estufas.
+
 ## Instalação
 
 Obs: Sugiro abaixar o app `expo` para celular, e importar o banco que esta na pasta server no Mysql 
