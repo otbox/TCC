@@ -12,6 +12,7 @@ import Divider from "../components/Divider";
 import Swiper from "react-native-swiper";
 import { Button2 } from "../components/Button2";
 import PdfPageGenerator from "../components/PdfPageGenerator";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 interface EstufaPropsProf {
     caution? : Number,
@@ -35,6 +36,8 @@ export default function EstufaProfile({route}) {
     const {ultTemp0, ultUmid0,nome, diasCultivo} = route.params;
     const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
     const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
+    const [clickable, setClickable] = useState<boolean>(false)
+
     useEffect(() => {
        axios.post(ApiVerify() +'GetEstufaProfile',{idEstufa: route.params.idEstufa}).then((response) => {
           const dados = response.data;
@@ -117,9 +120,7 @@ export default function EstufaProfile({route}) {
           <UltAttNoti UltimaData={currentDate} OnClick={() => SetReload(Reload + 1)} navigation={navigation}/>
             <View style = {{flexDirection: "row", height: 150, marginHorizontal: 5, justifyContent: "space-between"}}>
               <Paper style={{flex: 1, padding: 10}}>
-                {loaded ? (<Button2 height={100} width={100} onClick={() => PdfPageGenerator({data: dados, nomeEstufa: nome})} label={"PDFGerator"}/>) : (<Text>Loading...</Text>)}
-                
-                <Text></Text>  
+                {loaded ? (<Button2 height={120} width={175} onClick={() => PdfPageGenerator({data: dados, nomeEstufa: nome})} label={"PDFGerator"}/>) : (<Text>Loading...</Text>)}   
               </Paper>
               <View>
                 <Paper style={{flex: 1, padding: 14}}>
@@ -170,9 +171,20 @@ export default function EstufaProfile({route}) {
                             </LinearGradient>
                         </Defs> 
                       </VictoryChart>
-                      <View style={{flexDirection:"row"}}>  
-                        <Button title="Prev" onPress={previous} /> 
-                        <Button title="Next" onPress={next} />
+                      <View style={{flexDirection:"row", backgroundColor: 'red'}}>  
+                        {clickable ? (
+                          <View>
+                            <Button title="Prev" onPress={previous} /> 
+                            <Button title="Next" onPress={next} />
+                          </View>
+                        ) : (
+                          <TouchableOpacity style= {{left: 220}} onPress={() => {previous(); setClickable(true)}}>
+                            <View style={{backgroundColor: "aliceblue"}}>
+                              <MaterialIcons size={36} name="zoom-in"/>
+                            </View>
+                          </TouchableOpacity>
+                        )}
+                      
                       </View>
                     </View>
                     <View>
