@@ -1,0 +1,27 @@
+.title{
+    background-color: aqua;
+    color: rgb(128, 128, 128);
+    width: auto;
+}
+
+
+
+.title a {
+
+}
+h5:hover{
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.menu{
+    flex: 1;
+    margin-left: 3em;
+    display: flex;
+    justify-content: space-around;
+}
+
+.Options{
+    background-color: rgba(240, 248, 255, 0.575);
+    padding: 0.5em;
+}
