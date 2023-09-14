@@ -2,3 +2,10 @@ header{
   display: flex;
   justify-content: space-between;
 }
+
+.DashBoard-Container{
+  width: 100%; 
+}
+hr{
+  width: 100%;
+}

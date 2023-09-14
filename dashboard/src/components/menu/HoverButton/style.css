@@ -1,5 +1,5 @@
 .title{
-    background-color: aqua;
+    /* background-color: rgb(255, 255, 255); */
     color: rgb(128, 128, 128);
     width: auto;
 }
@@ -7,11 +7,21 @@
 
 
 .title a {
+    font-size: 1rem;
+}
 
+hr{
+    border-color: aquamarine;
+    border-bottom: 0;
+}
+
+h5 {
+    color: gray;
+    font-size: 1rem;
 }
 h5:hover{
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1rem;
 }
 
 .menu{

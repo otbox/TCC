@@ -23,7 +23,7 @@ export default function HoverButton({texts, title} : HoverButtonProperties) {
         <>
             <div ref={containerRef} className="title">
                 <h5>{title}</h5>
-            
+                <hr />
                 <div className='Options' style={{display: menuOption, position: 'absolute', marginTop: 0}}>
                     {texts.map((e, index) => {
                         return(

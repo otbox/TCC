@@ -1,10 +1,20 @@
-import { useState} from 'react'
+import { useEffect, useState} from 'react'
 import './App.css'
 import HoverButton from './components/menu/HoverButton/HoverButton'
 import { menu1 } from './components/menu/links'
+import axios from 'axios'
 
 function App() {
 
+  const address = 'https://otboxserver.000webhostapp.com/Connect.php?Operation=getEmpresa'
+  const address1 = 'https://otboxserver.000webhostapp.com/teste.php'
+
+  useEffect(() => {
+    //axios.get(address).then((result) => {console.log(result.data)})
+    axios.post(address1, {
+      Nome: '1',
+    }).then((e) => {console.log(e.data)}).catch((err) => {console.log(err)})
+  }, [])
   return (
     <>
       <header>
@@ -17,8 +27,8 @@ function App() {
           </div>
       </header>
       <hr />
-      <div>
-        <p>testeaaaaaaaaaaaa</p>
+      <div className='DashBoard-Container'>
+        <p>Ultima Atualização:</p>
       </div>
     </>
   )
