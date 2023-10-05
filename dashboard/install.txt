@@ -1,0 +1,6 @@
+Set-ExecutionPolicy unrestricted
+
+npm -g install yarn
+
+yarn dev
+
