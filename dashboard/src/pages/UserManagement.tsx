@@ -93,7 +93,7 @@
         Select,
         TextField,
       } from "@mui/material";
-      import { useEffect, useState } from "react";
+      import { useEffect, useRef, useState } from "react";
       import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
       import { PostToPHP } from "../components/Api";
 import UserInterface from "../components/userInterface";
@@ -109,24 +109,29 @@ import ReactDOM from 'react-dom';
         const [nivel, setNivel] = useState<string>();
         const [senha, setSenha] = useState<string>();
         const [idUsuario, setIdUsuario] = useState<string>(); 
-
         const [textError, setTextError] = useState<"error" | "primary" | "secondary" | "info" | "success" | "warning">("primary");
         const [nomeUser, setNomeUser] = useState<string>();
         const {state} = useLocation();
         const {params} = state;
         const idEmpresaGlobal = params;
+        const [alerts, setAlerts] = useState([]);
+        const autoC = useRef(null);
 
         useEffect(() => {
           SelectUsers()
-        }, [state]);
+        }, []);
+
+        const handleShowAlert = () => {
+          setAlerts(prevAlerts => [...prevAlerts, {}]);
+        }
 
         const SelectUsers = () => {
           PostToPHP({ Operation: "selectUsers", Content: { idEmpresa: idEmpresaGlobal } }).then(
             (result) => {
               setUsers(result);
-              ReactDOM.render(<SuccessAlert/>, document.getElementById('notification'));
             }
-          ).catch((err) => {console.log(err)});
+            ).catch((err) => {console.log(err)});
+            handleShowAlert();
         }
         const AddUser = () => {
           if(textError != 'error'){
@@ -153,7 +158,9 @@ import ReactDOM from 'react-dom';
           setSenha(undefined);
           setNivel(undefined);
           setTextoUser(null);
-          setInputValue(undefined)
+          setInputValue(undefined);
+          const ele = autoC.current.getElementsByClassName('MuiAutocomplete-clearIndicator')[0];
+          if (ele) ele.click();
         }
     
         let options : UserInterface[] = [];
@@ -183,8 +190,13 @@ import ReactDOM from 'react-dom';
         return (
           <>
             <h1>Gerenciar Usuários</h1>
-            <div id='notification'>
-
+            <div>
+            <button onClick={handleShowAlert}>Show Alert</button>
+              <div id="notifysdiv">
+              {alerts.map((alert, index) => (
+                <SuccessAlert key={index} />
+              ))}
+              </div>
             </div>
             
             <FormControl
@@ -193,7 +205,7 @@ import ReactDOM from 'react-dom';
               variant="standard"
             >
               <Autocomplete
-                
+                ref={autoC}
                 options={options.sort(
                   (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
                 )}
@@ -210,7 +222,6 @@ import ReactDOM from 'react-dom';
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, value) => {
                   if(value && value.name){
-                    
                     AtivoHandler(value)
                     setNivel(value.nivel)
                     setSenha(value.passw)
