@@ -24,8 +24,8 @@ const PostToPHP = ({ Operation, Content }: ApiProps): Promise<object> => {
         e.data != 0 ? resolve(e.data) : reject(-1);
       })
       .catch((err) => {
-        reject(-2);
         console.log(err);
+        reject(-2);
       });
   });
 };

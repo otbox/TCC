@@ -15,7 +15,7 @@ export function SuccessAlert() {
     }, []);
 
     return(
-        <Collapse in={open} ><Alert severity="success" onClose={() => {setOpen(false)}}>This is a success alert — check it out!</Alert></Collapse>
+        <Collapse style={{marginTop: 5}} in={open} ><Alert severity="success" onClose={() => {setOpen(false)}}>This is a success alert — check it out!</Alert></Collapse>
     )
 }
 
