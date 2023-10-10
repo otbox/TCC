@@ -5,13 +5,23 @@ import { menu1 } from "./components/menu/links";
 import axios from "axios";
 import { PostToPHP } from "./components/Api";
 import { useLocation } from "react-router-dom";
+import UserInterface from "./components/userInterface";
 
 function App() {
   const { state } = useLocation();
   const { result } = state;
-
+  const [SuperUser, setSuperUser] = useState<UserInterface>()
+   
   useEffect(() => {
-    console.log("foi " + result[0][4]);
+    console.log("foi " + result[0]);
+    setSuperUser({
+      name: result[0][3],
+      ativo: result[0][5],
+      nivel: result[0][4], 
+      idEmpresa: result[0][1],
+      passw: result[0][2]
+    })
+
     const Person = {
       Nome: "Abacaxi",
     };
@@ -25,7 +35,7 @@ function App() {
       <header>
         <h3>DashBoard</h3>
         <div className="menu">
-          <HoverButton key={1} title="Úsuarios" texts={menu1} />
+          <HoverButton key={1} title="Úsuarios" texts={menu1} params= {SuperUser?.idEmpresa } />
           <HoverButton key={2} title="teste" texts={menu1} />
           <HoverButton title="teste" texts={menu1} />
           <HoverButton title="teste" texts={menu1} />

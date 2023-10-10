@@ -9,14 +9,13 @@ const theme = createTheme(
             },
             error:{
                 main: red[500]
-
             }
         },
         components: {
             MuiTextField: {
                 styleOverrides:{
                     root: {
-                        margin: 10
+                        marginBottom: 10
                     }
                 }
             },
@@ -25,6 +24,13 @@ const theme = createTheme(
                     root: {
                         color: 'white',
                         fontWeight: 'bold'
+                    }
+                }
+            },
+            MuiSelect: {
+                styleOverrides: {
+                    root: {
+                        marginRight: 10
                     }
                 }
             }

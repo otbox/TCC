@@ -87,6 +87,7 @@ export default function Login() {
           ),
         }}
         label="Senha"
+        type="password"
       />
       <Button
         variant="contained"
