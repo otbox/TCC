@@ -1,17 +1,18 @@
 import { TextField, InputAdornment, Button } from "@mui/material";
-//import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import KeyIcon from "@mui/icons-material/Key";
 import { PostToPHP } from "../components/Api";
 import Cookies from "js-cookie";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { ErrorAlertC } from "../components/Alerts";
 
 export default function Login() {
   const nav = useNavigate();
   const [user, setUser] = useState<string>("");
   const [passw, setPassword] = useState<string>("");
   const [error, setError] = useState<string>();
+  const [ErrorAlert, setErrorAlert] = useState<{text: string, tipo: "error" | "success" | "info"}[]>([]);
 
   useEffect(() => {
     const user = Cookies.get("user");
@@ -24,6 +25,9 @@ export default function Login() {
     }
   }, []);
 
+  const handleShowAlertError = (alertText : string, TipoAlert: "error" | "success" | "info") => {
+    setErrorAlert(prevAlerts => [...prevAlerts, {text: alertText, tipo: TipoAlert}]);
+  }
   const VerifyAccount = (user: string, passw: string) => {
     if (user == null || passw == null) {
       setError("Insira um Usuário e Senha");
@@ -36,10 +40,14 @@ export default function Login() {
         passw,
       },
     })
-      .then((result) => {
+      .then((result : any) => {
         console.log(result);
         const phpNome = result[0][3];
         const phpPassw = result[0][4];
+        const phpAtivo = result[0][5];
+        const phpNivel = result[0][2];
+        if (phpNivel == 0) {handleShowAlertError('Você não tem permissão', 'error'); return;}
+        if (phpAtivo == 0) {handleShowAlertError('Você não está Ativo', 'error'); return;}
         if (phpNome === user && phpPassw === passw) {
           console.log("entrou");
           Cookies.set("user", phpNome);
@@ -49,7 +57,7 @@ export default function Login() {
         }
       })
       .catch((error) => {
-        error === -1 ? setError("Usuário ou Senha Incorretos") : "";
+        error === -1 ? handleShowAlertError("Usuário ou Senha Incorretos", 'info') : handleShowAlertError("Erro com Servidor",'error');
       });
   };
 
@@ -98,7 +106,11 @@ export default function Login() {
       >
         Entrar
       </Button>
-      <p>{error}</p>
+      <div>
+      {ErrorAlert.map((alert, index) => (
+                <ErrorAlertC key={index} text={alert.text} tipo={alert.tipo}/>
+        ))}
+      </div>
     </div>
   );
 }

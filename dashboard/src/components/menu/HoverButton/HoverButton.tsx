@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './style.css'
 import { menu } from '../links';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ interface HoverButtonProperties {
 }
 
 export default function HoverButton({texts, title, params} : HoverButtonProperties) {
-    const containerRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const [menuOption, setMenuOption] = useState("none");
     const nav = useNavigate()
 

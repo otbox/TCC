@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 //PEsquisar sobre como funciona o metodo de apgat depois de vir o resultado, trazendo assim a noss o resultado e apgando depois.
 const address = "https://otboxserver.000webhostapp.com/Connect.php";
 

@@ -1,7 +1,7 @@
 import { Alert, Collapse } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export function ErrorAlertC(props : {text : string, tipo: "success" | "error"}) {
+export function ErrorAlertC(props : {text : string, tipo: "success" | "error" | "info"}) {
     const {text, tipo} = props;
     const [open, setOpen] = useState(true);
     useEffect(() => {

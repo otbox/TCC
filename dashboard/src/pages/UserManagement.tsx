@@ -83,10 +83,8 @@
 
 
   import {
-    Alert,
         Autocomplete,
         Button,
-        Collapse,
         FormControl,
         InputLabel,
         MenuItem,
@@ -99,24 +97,23 @@
 import UserInterface from "../components/userInterface";
 import { useLocation } from "react-router-dom";
 import { ErrorAlertC} from "../components/Alerts";
-import ReactDOM from 'react-dom';
 
       export default function UserManagement() {
         const [users, setUsers] = useState<string[][] | undefined>();
         const [ativo, setAtivo] = useState<string>();
         const [textoUser, setTextoUser] = useState<UserInterface | null>(); //Nome do Usuario que foi digitado
-        const [inputValue, setInputValue] = useState<string>(''); //é a opção selecionada do autocomplete
+        const [inputValue, setInputValue] = useState<string | undefined>(''); //é a opção selecionada do autocomplete
         const [nivel, setNivel] = useState<string>();
         const [senha, setSenha] = useState<string>();
         const [idUsuario, setIdUsuario] = useState<string>(); 
         const [textError, setTextError] = useState<"error" | "primary" | "secondary" | "info" | "success" | "warning">("primary");
-        const [nomeUser, setNomeUser] = useState<string>();
+        const [nomeUser, setNomeUser] = useState<string | null>();
         const {state} = useLocation();
         const {params} = state;
         const idEmpresaGlobal = params;
         const [ErrorAlert, setErrorAlert] = useState<{text: string, tipo: "error" | "success"}[]>([]);
         
-        const autoC = useRef(null);
+        const autoC = useRef<HTMLElement | null>(null);
 
         //Inicializador da Página
         useEffect(() => {
@@ -131,7 +128,7 @@ import ReactDOM from 'react-dom';
 
         const SelectUsers = () => {
           PostToPHP({ Operation: "selectUsers", Content: { idEmpresa: idEmpresaGlobal } }).then(
-            (result) => {
+            (result : any) => {
               setUsers(result);
             }
             ).catch((err) => {console.log(err)});
@@ -174,7 +171,7 @@ import ReactDOM from 'react-dom';
         const RemoveUser = () => {
           PostToPHP({Operation: "deleteUser", Content: {
             idUsuario,
-          }}).then((result) => {console.log(result); SelectUsers(); handleShowAlert();})
+          }}).then((result) => {console.log(result); SelectUsers(); handleShowAlertError('Sucesso na Remoção', 'success');})
           CleanFields();
         }
         
@@ -185,16 +182,17 @@ import ReactDOM from 'react-dom';
           setTextoUser(null);
           setInputValue(undefined);
           setNomeUser(undefined);
-          const ele = autoC.current.getElementsByClassName('MuiAutocomplete-clearIndicator')[0];
+          if(autoC.current){
+          const ele = autoC.current.getElementsByClassName('MuiAutocomplete-clearIndicator')[0] as HTMLElement;
           if (ele) ele.click();
+          }
         }
 
 
         useEffect(() => {console.log(textoUser)},[textoUser])
         //Configurações do AutoComplete 
         const TextUserHandler = () => {
-          console.log(textoUser)
-          setNomeUser(textoUser);
+          setNomeUser(textoUser?.name);
         }
         let options : UserInterface[] = [];
         if (users) {
@@ -217,7 +215,7 @@ import ReactDOM from 'react-dom';
         }
 
         
-        return (
+        return (  
           <>
             <h1>Gerenciar Usuários</h1>
             <div>
@@ -236,10 +234,14 @@ import ReactDOM from 'react-dom';
               <Autocomplete
                 ref={autoC}
                 options={options.sort(
-                  (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
+                  (a, b) => {
+                    const firstValue = a.firstLetter || "";
+                    const secondValue = b.firstLetter || "";
+                    return -secondValue.localeCompare(firstValue);
+                  }
                 )}
-                groupBy={(option) => option.firstLetter}
-                getOptionLabel={(option) => option.name} 
+                groupBy={(option: UserInterface) => option.firstLetter || ''}
+                getOptionLabel={(option: UserInterface) => option.name || ''} 
                 noOptionsText= {textError == 'error' ? <p>Erro: Máximo de caracteres é 100</p> :
                 <Button variant="text" onClick={TextUserHandler} style={{color: 'gray', fontWeight: "normal",textTransform:"inherit"}}> 
                   <AddCircleOutlineIcon style={{marginRight: 10}}/>Não encontrado deseja adicionar?
@@ -249,7 +251,7 @@ import ReactDOM from 'react-dom';
                 
                 inputValue={inputValue}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                onChange={(event, value) => {
+                onChange={(_event, value) => {
                   if(value && value.name){
                     AtivoHandler(value)
                     setNivel(value.nivel)
@@ -257,9 +259,9 @@ import ReactDOM from 'react-dom';
                     setIdUsuario(value.idUsuario)
                   }
                 }}
-                onInputChange={(event, newValue) =>{
+                onInputChange={(_event, newValue) =>{
                   newValue.length >= 100 ? setTextError('error') : setTextError('primary') 
-                  setTextoUser(newValue)
+                  setTextoUser(prev => ({ ...prev, name: newValue } as UserInterface))
                   setInputValue(newValue)
                 }}
                 renderInput={(params) => <TextField helperText={nomeUser != undefined ? 'Nome do novo usuário: ' + nomeUser : ''} color={textError} {...params} label="Usuários" />}
