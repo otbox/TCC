@@ -1,0 +1,6 @@
+#teste {
+    borderRadius:13,
+    display: "flex",
+    alignItems: 'center';
+    cursor:'pointer'
+}

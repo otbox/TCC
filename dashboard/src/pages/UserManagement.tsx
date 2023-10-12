@@ -98,7 +98,7 @@
       import { PostToPHP } from "../components/Api";
 import UserInterface from "../components/userInterface";
 import { useLocation } from "react-router-dom";
-import { SuccessAlert } from "../components/Alerts";
+import { ErrorAlertC} from "../components/Alerts";
 import ReactDOM from 'react-dom';
 
       export default function UserManagement() {
@@ -114,15 +114,19 @@ import ReactDOM from 'react-dom';
         const {state} = useLocation();
         const {params} = state;
         const idEmpresaGlobal = params;
-        const [alerts, setAlerts] = useState([]);
+        const [ErrorAlert, setErrorAlert] = useState<{text: string, tipo: "error" | "success"}[]>([]);
+        
         const autoC = useRef(null);
 
+        //Inicializador da Página
         useEffect(() => {
           SelectUsers()
         }, []);
 
-        const handleShowAlert = () => {
-          setAlerts(prevAlerts => [...prevAlerts, {}]);
+
+        //Formador de Arrays com os Alertas
+        const handleShowAlertError = (alertText : string, TipoAlert: "error" | "success") => {
+          setErrorAlert(prevAlerts => [...prevAlerts, {text: alertText, tipo: TipoAlert}]);
         }
 
         const SelectUsers = () => {
@@ -131,38 +135,67 @@ import ReactDOM from 'react-dom';
               setUsers(result);
             }
             ).catch((err) => {console.log(err)});
-            handleShowAlert();
+            
         }
         const AddUser = () => {
           if(textError != 'error'){
+            if(nomeUser == undefined){handleShowAlertError("Usuário já existente, não é possível adicionar", 'error'); return;}
             PostToPHP({Operation: "addUser", Content: {
               idEmpresa: idEmpresaGlobal,
               nome: nomeUser,
               ativo: ativo,
               nivel: nivel,
               passw: senha,
-            }}).then((result) => {SelectUsers()})
+            }})
+            .then((result) => {console.log(result);SelectUsers(); handleShowAlertError("Sucesso na Inclusão :)","success"); CleanFields();})
+            .catch(() =>{handleShowAlertError("Erro de Servidor", 'error');})
+          }else{
+            handleShowAlertError("Erro de Campo, por favor preencha corretamente", "error");
           }
         }
+
+        const AlterUser = () => {
+          console.log(inputValue)
+          if(textError != 'error' && inputValue != undefined){
+          PostToPHP({Operation:"alterUser", Content: {
+            idUsuario,
+            ativo,
+            nome: inputValue,
+            nivel,
+            passw: senha, 
+          }})
+          .then((res) => {console.log(res);SelectUsers(); handleShowAlertError("Alterado com Sucesso", 'success');})
+          .catch(() => {handleShowAlertError("Erro de Servidor", 'error')})
+          }else{
+            handleShowAlertError("Erro de Campo", 'error');
+          }
+        }
+
         const RemoveUser = () => {
           PostToPHP({Operation: "deleteUser", Content: {
             idUsuario,
-          }}).then((result) => {console.log(result); SelectUsers()})
+          }}).then((result) => {console.log(result); SelectUsers(); handleShowAlert();})
           CleanFields();
         }
-    
-        useEffect(() => {console.log(textoUser)},[textoUser])
-    
+        
         const CleanFields = () => {
           setAtivo(undefined);
           setSenha(undefined);
           setNivel(undefined);
           setTextoUser(null);
           setInputValue(undefined);
+          setNomeUser(undefined);
           const ele = autoC.current.getElementsByClassName('MuiAutocomplete-clearIndicator')[0];
           if (ele) ele.click();
         }
-    
+
+
+        useEffect(() => {console.log(textoUser)},[textoUser])
+        //Configurações do AutoComplete 
+        const TextUserHandler = () => {
+          console.log(textoUser)
+          setNomeUser(textoUser);
+        }
         let options : UserInterface[] = [];
         if (users) {
           options = users.map((value) => {
@@ -177,12 +210,9 @@ import ReactDOM from 'react-dom';
             };
           });
         }
-        const TextUserHandler = () => {
-          setNomeUser(textoUser);
-        }
-    
+        
+        //Select Ativo handler
         const AtivoHandler = (objeto: UserInterface) => {
-          //console.log(objeto);
           setAtivo(objeto.ativo)
         }
 
@@ -191,10 +221,9 @@ import ReactDOM from 'react-dom';
           <>
             <h1>Gerenciar Usuários</h1>
             <div>
-            <button onClick={handleShowAlert}>Show Alert</button>
               <div id="notifysdiv">
-              {alerts.map((alert, index) => (
-                <SuccessAlert key={index} />
+              {ErrorAlert.map((alert, index) => (
+                <ErrorAlertC key={index} text={alert.text} tipo={alert.tipo}/>
               ))}
               </div>
             </div>
@@ -216,7 +245,7 @@ import ReactDOM from 'react-dom';
                   <AddCircleOutlineIcon style={{marginRight: 10}}/>Não encontrado deseja adicionar?
                 </Button>
                 }
-                value={textoUser}
+                //value={textoUser} 
                 
                 inputValue={inputValue}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -230,7 +259,7 @@ import ReactDOM from 'react-dom';
                 }}
                 onInputChange={(event, newValue) =>{
                   newValue.length >= 100 ? setTextError('error') : setTextError('primary') 
-                  //setTextoUser(newValue)
+                  setTextoUser(newValue)
                   setInputValue(newValue)
                 }}
                 renderInput={(params) => <TextField helperText={nomeUser != undefined ? 'Nome do novo usuário: ' + nomeUser : ''} color={textError} {...params} label="Usuários" />}
@@ -286,7 +315,8 @@ import ReactDOM from 'react-dom';
             <br />
             <Button variant="contained" onClick={AddUser}> Criar</Button>
             <Button variant="contained" onClick={RemoveUser}> Remover</Button>
-            <Button variant="contained" onClick={CleanFields}> Alterar</Button>
+            <Button variant="contained" onClick={AlterUser}> Alterar</Button>
+            <Button variant="contained" onClick={CleanFields}> Clear</Button>
           </>
         );
       }

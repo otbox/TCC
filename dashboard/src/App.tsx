@@ -6,6 +6,7 @@ import axios from "axios";
 import { PostToPHP } from "./components/Api";
 import { useLocation } from "react-router-dom";
 import UserInterface from "./components/userInterface";
+import EstufaButton from "./components/EstufaButton/EstufaButton";
 
 function App() {
   const { state } = useLocation();
@@ -44,6 +45,7 @@ function App() {
       <hr />
       <div className="DashBoard-Container">
         <p>Ultima Atualização:</p>
+        <EstufaButton diasCultivo={2} idEmpresa={1} idEstufa={1} nome="tre" temperatuta={12} umidade={21}/>
       </div>
     </>
   );
