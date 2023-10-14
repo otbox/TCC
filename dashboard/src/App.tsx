@@ -5,6 +5,7 @@ import { menu1 } from "./components/menu/links";
 import { PostToPHP } from "./components/Api";
 import { useLocation } from "react-router-dom";
 import UserInterface from "./components/userInterface";
+import EstufaButton from "./components/EstufaButton/EstufaButton";
 //import EstufaButton from "./components/EstufaButton/EstufaButton";
 
 
@@ -26,13 +27,6 @@ function App() {
       passw: result[0][2]   
     })
   }
-
-    const Person = {
-      Nome: "Abacaxi",
-    };
-    PostToPHP({ Operation: "select", Content: Person }).then((e) => {
-      console.log(e);
-    });
   }, []);
 
   return (
@@ -49,7 +43,7 @@ function App() {
       <hr />
       <div className="DashBoard-Container">
         <p>Ultima Atualização:</p>
-        {/* <EstufaButton diasCultivo={2} idEmpresa={1} idEstufa={1} nome="tre" temperatuta={12} umidade={21} status={12} notifs="aa"/> */}
+        <EstufaButton diasCultivo={2} idEmpresa={1} idEstufa={1} nome="tre" temperatuta={12} umidade={21} status={12} notifs="aa"/>
       </div>
     </>
   );

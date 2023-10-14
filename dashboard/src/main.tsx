@@ -7,6 +7,7 @@ import Login from "./pages/Login.tsx";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme.tsx";
 import UserManagement from "./pages/UserManagement.tsx";
+import EstufaView from "./pages/EstufaView.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: "/UserManagement",
     element: <UserManagement />,
   },
+  {
+    path: "/EstufaPage",
+    element: <EstufaView />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

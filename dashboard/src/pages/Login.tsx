@@ -46,7 +46,7 @@ export default function Login() {
         const phpPassw = result[0][4];
         const phpAtivo = result[0][5];
         const phpNivel = result[0][2];
-        if (phpAtivo == 0) {handleShowAlertError('Você não está Ativo', 'error'); return;}z
+        if (phpAtivo == 0) {handleShowAlertError('Você não está Ativo', 'error'); return;}
         if (phpNivel == 0) {handleShowAlertError('Você não tem permissão', 'error'); return;}
         if (phpNome === user && phpPassw === passw) {
           console.log("entrou");
