@@ -294,7 +294,7 @@ import { ErrorAlertC} from "../components/Alerts";
                 onChange={(e) => {setNivel(e.target.value as string)}}
               >
                 <MenuItem value={"1"}>Administrador</MenuItem>
-                <MenuItem value={"0"}>Funcionário</MenuItem>
+                <MenuItem value={"0"}>Usuário</MenuItem>
               </Select>
             </FormControl>    
             <FormControl
