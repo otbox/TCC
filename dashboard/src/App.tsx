@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import HoverButton from "./components/menu/HoverButton/HoverButton";
-import { menu1 } from "./components/menu/links";
 import { PostToPHP } from "./components/Api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import UserInterface from "./components/userInterface";
 import EstufaButton from "./components/EstufaButton/EstufaButton";
+import { EstufaProps } from "./pages/EstufaView";
+import { Button } from "@mui/material";
 //import EstufaButton from "./components/EstufaButton/EstufaButton";
 
 
@@ -15,6 +15,8 @@ function App() {
   }
   const { result } = useLocation().state as StateProps;
   const [SuperUser, setSuperUser] = useState<UserInterface>()
+  const [EstufaList, setEstufaList] = useState<EstufaProps[]>()
+  const nav = useNavigate()
    
   useEffect(() => {
     if (result && result[0]) {
@@ -29,21 +31,52 @@ function App() {
   }
   }, []);
 
+  useEffect(() => {
+    SuperUser ? 
+    PostToPHP({Operation: 'getAllEstufas', Content: {
+      idEmpresa : SuperUser.idEmpresa
+    }}).then((result: any) => {
+      const mappedResult = result.map((item : any) => ({
+        idEstufa : item[0],
+        idEmpresa : item[1],
+        nome : item[2],
+        diasCultivo : item[4],
+        temperatuta : item[5],
+        umidade : item[6],
+        status : item[7],
+        notifs : item[8],
+      }))
+      setEstufaList(mappedResult);
+    })
+    : ''
+  },[SuperUser])
+
+  useEffect(() => {})
   return (
     <>
       <header>
-        <h3>DashBoard</h3>
+        <p style={{fontSize: '4vw'}}>DashBoard</p>
         <div className="menu">
-          <HoverButton key={1} title="Úsuarios" texts={menu1} params= {SuperUser?.idEmpresa } />
-          <HoverButton key={2} title="teste" texts={menu1} />
-          <HoverButton title="teste" texts={menu1} />
-          <HoverButton title="teste" texts={menu1} />
+          <Button onClick={() => {nav('/userManagement', {state: {params: SuperUser?.idEmpresa}})}} style={{color: 'black'}} variant="outlined" >Gerenciar Usuários</Button>
+          {/* <HoverButton key={1} title="Úsuarios" texts={menu1} params= {SuperUser?.idEmpresa } /> */}
         </div>
       </header>
       <hr />
       <div className="DashBoard-Container">
         <p>Ultima Atualização:</p>
-        <EstufaButton diasCultivo={2} idEmpresa={1} idEstufa={1} nome="tre" temperatuta={12} umidade={21} status={12} notifs="aa"/>
+        {EstufaList ? EstufaList.map((item, index) => {return (
+          <EstufaButton 
+            idEmpresa={item.idEmpresa} 
+            idEstufa={item.idEstufa} 
+            diasCultivo={item.diasCultivo} 
+            nome={item.nome} 
+            notifs={item.notifs} 
+            temperatuta={item.temperatuta}
+            status={item.status}
+            umidade={item.umidade}
+            key={index}
+            />
+        )}): <p>Loading...</p>}
       </div>
     </>
   );

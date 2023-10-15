@@ -11,7 +11,6 @@ export default function Login() {
   const nav = useNavigate();
   const [user, setUser] = useState<string>("");
   const [passw, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>();
   const [ErrorAlert, setErrorAlert] = useState<{text: string, tipo: "error" | "success" | "info"}[]>([]);
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export default function Login() {
   }
   const VerifyAccount = (user: string, passw: string) => {
     if (user == null || passw == null) {
-      setError("Insira um Usuário e Senha");
+      handleShowAlertError("Insira um Usuário e Senha", 'info');
       return;
     }
     PostToPHP({
@@ -49,11 +48,9 @@ export default function Login() {
         if (phpAtivo == 0) {handleShowAlertError('Você não está Ativo', 'error'); return;}
         if (phpNivel == 0) {handleShowAlertError('Você não tem permissão', 'error'); return;}
         if (phpNome === user && phpPassw === passw) {
-          console.log("entrou");
           Cookies.set("user", phpNome);
           Cookies.set("passw", phpPassw);
           nav("/Homepage", { state: { result } });
-          setError("");
         }
       })
       .catch((error) => {

@@ -1,0 +1,31 @@
+
+.info {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.info div{
+    display: flex;  
+    align-items: center;  
+    font-size: 2vw;
+}
+
+.info img{
+    width: 2.7vw;
+    height: 2.7vw;
+    align-self: center;
+}
+#title{
+    font-size: 3vw;
+}
+
+#pCultivo {
+    font-size: 2vw;
+}
+#pTemperatura {
+    color: coral;
+}
+#pUmidade {
+    color: cornflowerblue;
+}
