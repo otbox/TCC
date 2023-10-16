@@ -18,20 +18,22 @@ export default function EstufaButton({idEmpresa, idEstufa, diasCultivo, nome, te
     } 
 
     useEffect(() => {
+        console.log('status'+status)
         switch(status){
-            case 0:
+            case "0":
                 setStatusBall({Status: "Off"})
             break
-            case 1:
+            case "1":
                 setStatusBall({Status: "Working"})
             break
-            case 2:
+            case "2":
                 setStatusBall({Status: "Suspended"})
             break
-            case 3:
+            case "3":
                 setStatusBall({Status: "Maintenance"})
             break
         }
+        console.log(StatusBall)
     }, [status])
 
     return (

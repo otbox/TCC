@@ -97,6 +97,7 @@
 import UserInterface from "../components/userInterface";
 import { useLocation } from "react-router-dom";
 import { ErrorAlertC} from "../components/Alerts";
+import BackButton from "../components/BackButton";
 
       export default function UserManagement() {
         const [users, setUsers] = useState<string[][] | undefined>();
@@ -217,6 +218,7 @@ import { ErrorAlertC} from "../components/Alerts";
         
         return (  
           <>
+            <BackButton />
             <h1>Gerenciar Usuários</h1>
             <div>
               <div id="notifysdiv">

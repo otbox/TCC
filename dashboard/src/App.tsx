@@ -6,6 +6,7 @@ import UserInterface from "./components/userInterface";
 import EstufaButton from "./components/EstufaButton/EstufaButton";
 import { EstufaProps } from "./pages/EstufaView";
 import { Button } from "@mui/material";
+import { ExitButton } from "./components/BackButton";
 //import EstufaButton from "./components/EstufaButton/EstufaButton";
 
 
@@ -46,6 +47,7 @@ function App() {
         status : item[7],
         notifs : item[8],
       }))
+      console.log(mappedResult)
       setEstufaList(mappedResult);
     })
     : ''
@@ -55,6 +57,7 @@ function App() {
   return (
     <>
       <header>
+        <ExitButton />
         <p style={{fontSize: '4vw'}}>DashBoard</p>
         <div className="menu">
           <Button onClick={() => {nav('/userManagement', {state: {params: SuperUser?.idEmpresa}})}} style={{color: 'black'}} variant="outlined" >Gerenciar Usuários</Button>

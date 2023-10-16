@@ -11,6 +11,10 @@ const theme = createTheme(
                 main: red[500]
             }
         },
+        typography: {
+            fontSize: 18
+          },
+        
         components: {
             MuiTextField: {
                 styleOverrides:{
