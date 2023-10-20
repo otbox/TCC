@@ -6,6 +6,8 @@ import { DataGrid, GridColDef} from "@mui/x-data-grid";
 import BackButton from "../components/BackButton";
 import { Paper } from "@mui/material";
 
+import downloadPdfButton from "../components/pdfGenerator";
+
 export interface EstufaProps {
     idEmpresa: number,
     idEstufa: number,
@@ -16,17 +18,18 @@ export interface EstufaProps {
     status: string,
     notifs: string
 }
-interface historico {
+export interface historico {
     id: number,
     temperatura: number,
     data: Date,
+    hour: string,
     umidade: string,
 }
 
 
 //Configuração da coluna da Tabela
 const columns: GridColDef[] = [
-    { field: 'data', headerName: 'Data', type:"Date", flex: 1 },
+    { field: 'data', headerName: 'Data', type:"Date", minWidth: 200, flex: 1 },
     { field: 'temperatura', headerName: 'Temperatura', type: "number", width: 200, headerAlign: 'center', align: "center" },
     { field: 'umidade', headerName: 'Umidade', type: "number", width: 200,  headerAlign: 'center', align: "center" },
   ];
@@ -34,7 +37,7 @@ const columns: GridColDef[] = [
 export default function EstufaView() {
     //inicializaçõa de variaveis do Dashboard
     const EstufaInfoRoute = useLocation().state as EstufaProps;
-    const {idEmpresa, idEstufa, diasCultivo} = EstufaInfoRoute
+    const {idEmpresa, idEstufa, diasCultivo, nome} = EstufaInfoRoute
     //Variveis Próprias 
     const [TimeNow, setTimeNow] = useState<string>()
     const [historico, setHistorico] = useState<historico[]>([])
@@ -50,21 +53,34 @@ export default function EstufaView() {
         PostToPHP({Operation: 'getEstufa', Content:{idEmpresa: idEmpresa, idEstufa: idEstufa}})
         .then((result : any) => {
             console.log(result)
-            setHistorico(result);
-            const mappedRes = result.map((item : any, index : any) => ({
+            const resultado = result.reverse()
+            setHistorico(resultado);
+            const mappedRes = resultado.map((item : any, index : any) => {
+                let hour1 = new Date (item[1]).toLocaleString([], {hour: "2-digit", minute:"2-digit"})
+                return {
                 id: index,
                 temperatura: item[2],
                 umidade: item[3],
-                data: item[1]
-            }))
+                data: item[1],
+                hour: hour1
+            }
+            })
             setHistorico(mappedRes)
         })
     },[])
     useEffect(() => {
+        console.log(historico)
+
     },[historico])
     let slicedTemp = historico.slice(12,20)
+
+    function exportPdf () {
+        return(
+            downloadPdfButton({data: historico, nomeEstufa: nome})
+        )
+    }
     return (
-        <>
+        <> 
             <BackButton />
             <div style={{display: 'flex', justifyContent: 'space-between', margin: 10}}>
                 <p>Hoje é o Dia {diasCultivo} do Cultivo</p>
@@ -84,7 +100,7 @@ export default function EstufaView() {
                             <stop offset="95%" stopColor="#eba834" stopOpacity={0}/>
                             </linearGradient>
                         </defs>
-                        <XAxis dataKey="data" />
+                        <XAxis dataKey='hour' tickSize={10} />
                         <YAxis />
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip />
@@ -94,20 +110,26 @@ export default function EstufaView() {
                 </ResponsiveContainer>
             </div>
             <div style={{margin:'10%', marginTop: 45, display: "flex", flex: 1, justifyContent: "center"}}>
-                <div style={{display:'flex', height: 400, width: '50%'}}>
+                <div style={{display:'flex', height: 420, width: '50%', minWidth:630}}>
                 <DataGrid
                     rows={historico}
                     //getRowId={(row : historico) => row.data}
+                    slots={{
+                        toolbar: exportPdf
+                    }}
                     columns={columns}
                     initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
+                    sorting : {
+                        sortModel: [{field: 'Data', sort: 'desc'}]
+                    }
                     }}
                     pageSizeOptions={[5, 10]}
                 />
                 </div>
-                <div style={{display:'flex',flexDirection: "column" , marginLeft: 20, justifyContent: 'space-between', height: 400, width: '50%'}}>
+                <div style={{display:'flex',flexDirection: "column" , marginLeft: 20, justifyContent: 'space-between', height: 420, width: '50%'}}>
                     <Paper elevation={2} style={{height: '45%'}}>
                         <div>
                             <p>Ultimos 8 Registros</p>
@@ -119,6 +141,7 @@ export default function EstufaView() {
                                 data={slicedTemp} 
                                 startAngle={180} 
                                 endAngle={0}
+                            
                                 >
                                     <RadialBar  fill="orange" label={{display:'none'}} background dataKey='temperatura' />
                                     <Tooltip />
