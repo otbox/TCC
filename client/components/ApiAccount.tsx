@@ -19,7 +19,7 @@ export const ReceiveAccounts = async (props : ApiProps) => {
 
 export const CreateAccount  = async (props: ApiProps) => {
     const {address, name, passwd} = props;
-
+    
     await axios.post(address + "InsertRegister", {
         name,
         passwd,
@@ -37,24 +37,29 @@ export const RemoveAccount = async (props: ApiProps) => {
 }
 
 export const isLoginAccount = (props: ApiProps): Promise<UserType> => {
-    const { address, name, passwd } = props;
+    const { name, passwd } = props;
+    const address = "https://otboxserver.000webhostapp.com/Connect.php";
     return new Promise<UserType>((resolve, reject) => {
       axios
-        .post(address + "SelectRegister", {
-          name,
-          passwd,
+        .post(address, {
+          Operation: "VerifyAccount",
+          Content :{
+          user : name,
+          passw : passwd,
+          }
         })
         .then((response) => {
+          console.log(response.data)
           if (!response.data) {
             reject(-1);
           } else {
             const user1: UserType = {
-              id: response.data[0].idUsuarios,
-              name: response.data[0].Nome,
-              nivel: response.data[0].Nivel,
-              senha: response.data[0].Senha,
-              ativo: response.data[0].Ativo.data,
-              idEmpresa: response.data[0].fk_idEmpresa_u,
+              id: response.data[0][0],
+              name: response.data[0][3],
+              nivel: response.data[0][2],
+              senha: response.data[0][4],
+              ativo: response.data[0][5],
+              idEmpresa: response.data[0][1],
             };
             console.log(user1.ativo)
             if(user1.ativo == 0){reject(-2)}
