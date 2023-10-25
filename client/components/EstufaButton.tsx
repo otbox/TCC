@@ -11,29 +11,30 @@ interface EstufaProps {
     temp? : Number,
     umid? : Number, 
     idEstufa : Number,
-    Status?: Number,
+    Status?: string,
     DiasCultivo?: Number,
+    idEmpresa: Number,
 }
 
-export default function EstufaButton({nome , temp, umid, caution, onClick, idEstufa, Status, DiasCultivo} : EstufaProps) {
+export default function EstufaButton({nome , temp, umid, caution, onClick, idEstufa, Status, DiasCultivo, idEmpresa} : EstufaProps) {
     const navigation = useNavigation();
     const [StatusBall, setStatusBall] = useState<NotificationBallProps>({Status: "Maintenance"})
     const AcessandoEstufa = () => {
-        navigation.navigate("EstufaProfile", {idEstufa: idEstufa, nome: nome, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid});
+        navigation.navigate("EstufaProfile", {idEmpresa: idEmpresa,idEstufa: idEstufa, nome: nome, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid});
     }
     
     useEffect(() => {
         switch(Status){
-            case 0:
+            case "0":
                 setStatusBall({Status: "Off"})
             break
-            case 1:
+            case "1":
                 setStatusBall({Status: "Working"})
             break
-            case 2:
+            case "2":
                 setStatusBall({Status: "Suspended"})
             break
-            case 3:
+            case "3":
                 setStatusBall({Status: "Maintenance"})
             break
         }

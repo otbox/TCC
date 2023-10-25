@@ -21,12 +21,25 @@ export default function Home() {
     const bb = useAppSelector(SelectUser);
     const [Reload, SetReload] = useState(1)
     const [currentDate, setCurrentDate] = useState(new Date());
-
+    const address = "https://otboxserver.000webhostapp.com/Connect.php";
     useEffect(() => {
-        axios.post(ApiVerify() +'GetEstufas', {
-            idEmpresa: bb?.idEmpresa,
-        }).then((response) => {
-            SetEstufas(response.data)
+        axios.post(address, {
+            Operation: 'getAllEstufas',
+            Content:{
+                idEmpresa: bb?.idEmpresa,
+            }
+        }).then((response : any) => {
+            const mappedResult = response.data.map((item : any) => {
+                return {idEstufa : item[0],
+                idEmpresa : item[1],
+                nome : item[2],
+                diasCultivo : item[4],
+                temperatura : item[5],
+                umidade : item[6],
+                status : item[7],
+                notifs : item[8],
+            }})
+            SetEstufas(mappedResult)
             setCurrentDate(new Date());
         })
     }, [Reload])
@@ -64,7 +77,7 @@ export default function Home() {
                     <Text>{bb?.ativo}</Text> 
                     {Array.isArray(Estufas) && Estufas.map((data) => {
                         return(
-                            <EstufaButton DiasCultivo={data.DiasCultivo} Status={data.Status} key={data.idEstufa} idEstufa={data.idEstufa} nome={data.Nome} temp={data.TempAlvo} umid={data.UmiAlvo}/>
+                            <EstufaButton idEmpresa={data.idEmpresa}  DiasCultivo={data.diasCultivo} Status={data.status} key={data.idEstufa} idEstufa={data.idEstufa} nome={data.nome} temp={data.temperatura} umid={data.umidade}/>
                         ) 
                     })}
                     <EstufaButton Status={1} idEstufa={3} nome={"teste"} temp={36}/>

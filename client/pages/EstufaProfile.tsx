@@ -37,9 +37,21 @@ export default function EstufaProfile({route}) {
     const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
     const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
     const [clickable, setClickable] = useState<boolean>(false)
+    const address = "https://otboxserver.000webhostapp.com/Connect.php";
 
     useEffect(() => {
-       axios.post(ApiVerify() +'GetEstufaProfile',{idEstufa: route.params.idEstufa}).then((response) => {
+      console.log(route.params.idEstufa)
+       axios.post(address,{Operation: "getEstufa",Content:{idEmpresa:route.params.idEmpresa ,idEstufa: route.params.idEstufa}}).then((response) => {
+            const mappedRes = response.data.map((item : any, index : any) => {
+              let hour1 = new Date (item[1]).toLocaleString([], {hour: "2-digit", minute:"2-digit"})
+              return {
+              id: index,
+              temperatura: item[2],
+              umidade: item[3],
+              data: item[1],
+              hour: hour1
+          }
+          })
           const dados = response.data;
           setdados(dados);
           setDadosGraf(dados)
