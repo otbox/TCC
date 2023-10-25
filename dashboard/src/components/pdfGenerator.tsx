@@ -76,6 +76,7 @@ export default function downloadPdfButton({data, nomeEstufa} : pdfProps) {
     }
 
     return (
-        <Button variant='text' style={{width: 30, height: 30, marginLeft: '90%'}} onClick={exportPDF}><PictureAsPdf style={{color: 'gray'}}/></Button> 
+        <Button variant='text' style={{width: 120, height: 30, justifyContent: 'space-between', alignItems: 'center', marginLeft: '82%'}}
+         onClick={exportPDF}> <p style={{color: 'gray', fontSize: 12}}>Exportar</p> <PictureAsPdf style={{color: 'gray'}}/></Button> 
     )
   }

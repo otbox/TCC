@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"
 import { PostToPHP } from "../components/Api";
-import { Area, AreaChart, CartesianGrid, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DataGrid, GridColDef} from "@mui/x-data-grid";
 import BackButton from "../components/BackButton";
 import { Paper } from "@mui/material";
@@ -123,7 +123,7 @@ export default function EstufaView() {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
                     sorting : {
-                        sortModel: [{field: 'Data', sort: 'desc'}]
+                        sortModel: [{field: 'data', sort: 'desc'}]
                     }
                     }}
                     pageSizeOptions={[5, 10]}
@@ -133,36 +133,17 @@ export default function EstufaView() {
                     <Paper elevation={2} style={{height: '45%'}}>
                         <div>
                             <p>Ultimos 8 Registros</p>
-                            <RadialBarChart 
-                                width={300} 
-                                height={250} 
-                                innerRadius="20%" 
-                                outerRadius="90%" 
-                                data={slicedTemp} 
-                                startAngle={180} 
-                                endAngle={0}
-                            
-                                >
-                                    <RadialBar  fill="orange" label={{display:'none'}} background dataKey='temperatura' />
-                                    <Tooltip />
-                            </RadialBarChart>
+                            <BarChart width={180} height={130} data={slicedTemp}>
+                                <Bar dataKey="temperatura" fill="orange" />
+                            </BarChart>
                         </div>
                     </Paper>
                     <Paper elevation={2} style={{height: '45%'}}>
-                    <div>
+                        <div>
                             <p>Ultimos 8 Registros</p>
-                            <RadialBarChart 
-                                width={300} 
-                                height={250} 
-                                innerRadius="20%" 
-                                outerRadius="90%" 
-                                data={slicedTemp} 
-                                startAngle={180} 
-                                endAngle={0}
-                                >
-                                    <RadialBar  fill="#8884d8" label={{display:'none'}} background dataKey='umidade' />
-                                    <Tooltip />
-                            </RadialBarChart>
+                            <BarChart width={180} height={130} data={slicedTemp}>
+                                <Bar dataKey="umidade" fill="#8884d8" />
+                            </BarChart>
                         </div>
                     </Paper>
                 </div>
