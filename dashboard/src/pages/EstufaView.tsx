@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"
 import { PostToPHP } from "../components/Api";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DataGrid, GridColDef} from "@mui/x-data-grid";
 import BackButton from "../components/BackButton";
 import { Paper } from "@mui/material";
@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
 export default function EstufaView() {
     //inicializaçõa de variaveis do Dashboard
     const EstufaInfoRoute = useLocation().state as EstufaProps;
-    const {idEmpresa, idEstufa, diasCultivo, nome} = EstufaInfoRoute
+    const {idEmpresa, idEstufa, diasCultivo, nome, status} = EstufaInfoRoute
     //Variveis Próprias 
     const [TimeNow, setTimeNow] = useState<string>()
     const [historico, setHistorico] = useState<historico[]>([])
@@ -72,7 +72,6 @@ export default function EstufaView() {
         console.log(historico)
 
     },[historico])
-    let slicedTemp = historico.slice(12,20)
 
     function exportPdf () {
         return(
@@ -132,18 +131,14 @@ export default function EstufaView() {
                 <div style={{display:'flex',flexDirection: "column" , marginLeft: 20, justifyContent: 'space-between', height: 420, width: '50%'}}>
                     <Paper elevation={2} style={{height: '45%'}}>
                         <div>
-                            <p>Ultimos 8 Registros</p>
-                            <BarChart width={180} height={130} data={slicedTemp}>
-                                <Bar dataKey="temperatura" fill="orange" />
-                            </BarChart>
+                            <p>{nome}</p>
+                            <p>Dia de Cultivo nº</p>
+                            <p>{diasCultivo}</p>
                         </div>
                     </Paper>
                     <Paper elevation={2} style={{height: '45%'}}>
                         <div>
-                            <p>Ultimos 8 Registros</p>
-                            <BarChart width={180} height={130} data={slicedTemp}>
-                                <Bar dataKey="umidade" fill="#8884d8" />
-                            </BarChart>
+                            <p>{status}</p>
                         </div>
                     </Paper>
                 </div>

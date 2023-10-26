@@ -14,7 +14,8 @@ export default function EstufaButton({idEmpresa, idEstufa, diasCultivo, nome, te
     const [StatusBall, setStatusBall] = useState<NotificationBallProps>({Status: "Maintenance"})
 
     const useNav = () =>{
-        nav("/EstufaPage", {state : {idEmpresa, idEstufa, diasCultivo, nome, temperatuta, umidade}})
+        const statusName = StatusBall.Status;
+        nav("/EstufaPage", {state : {idEmpresa, idEstufa, diasCultivo, nome, temperatuta, umidade, status: statusName}})
     } 
 
     useEffect(() => {

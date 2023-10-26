@@ -21,6 +21,13 @@ interface EstufaPropsProf {
     umid? : Number, 
 }
 
+interface historico {
+  id: number,
+  temperatura: number,
+  data: Date,
+  umidade: string,
+}
+
 const lineData = [{value: 0},{value: 20},{value: 18},{value: 40},{value: 36},{value: 60},{value: 54},{value: 85}];
 
 export default function EstufaProfile({route}) {
@@ -40,32 +47,23 @@ export default function EstufaProfile({route}) {
     const address = "https://otboxserver.000webhostapp.com/Connect.php";
 
     useEffect(() => {
-      console.log(route.params.idEstufa)
-       axios.post(address,{Operation: "getEstufa",Content:{idEmpresa:route.params.idEmpresa ,idEstufa: route.params.idEstufa}}).then((response) => {
-            const mappedRes = response.data.map((item : any, index : any) => {
-              let hour1 = new Date (item[1]).toLocaleString([], {hour: "2-digit", minute:"2-digit"})
-              return {
-              id: index,
-              temperatura: item[2],
-              umidade: item[3],
-              data: item[1],
-              hour: hour1
-          }
-          })
+       axios.post(address,{Operation: "getEstufa",Content:{idEstufa: route.params.idEstufa}}).then((response) => {
           const dados = response.data;
+          //console.log(dados);
           setdados(dados);
-          setDadosGraf(dados)
-          const tempArray = dados.map(({ Temp }) => Temp);
+          setDadosGraf(dados);
+          const tempArray = dados.map((data: number[]) => {console.log(data[2]);return(data[2])});
+          console.log(tempArray)
           setTemp(tempArray);
           const tempMax = Math.max(...tempArray) + 5;
           setTempMax(tempMax);
           const pag = dados.length - 5 
           setPag(pag)
           const ultDado = dados[dados.length - 1] 
-          setUltTemp(ultDado.Temp)
-          setUltUmid(ultDado.Umi)
+          setUltTemp(ultDado[2])
+          setUltUmid(ultDado[3])
           setLoaded(true)
-       }).catch((error) => {console.log(error)})
+       }).catch((error : any) => {console.log(error)})
        navigation.setOptions({
         title: "Estufa: " + nome,
        })
