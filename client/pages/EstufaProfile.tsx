@@ -34,30 +34,42 @@ export default function EstufaProfile({route}) {
     const navigation = useNavigation();
     const [Reload, SetReload] = useState<number>(1)
     const [loaded, setLoaded] = useState<boolean>(false)
-    const [dados, setdados] = useState<any[]>([]);
+    const [dados, setdados] = useState<historico[]>([]);
     const [pag, setPag] = useState<number>(20)
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [Temp, setTemp] = useState<number[]>([]);
     const [TempMax, setTempMax] = useState<number>();
     const [dadosGraf, setDadosGraf] = useState<any[]>([])
     const {ultTemp0, ultUmid0,nome, diasCultivo} = route.params;
     const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
     const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
-    const [clickable, setClickable] = useState<boolean>(false)
     const address = "https://otboxserver.000webhostapp.com/Connect.php";
 
+    interface historico {
+      idEstufa : number,
+      data : Date,
+      temperatura: number, 
+      umidade: number
+    }
+
     useEffect(() => {
-       axios.post(address,{Operation: "getEstufa",Content:{idEstufa: route.params.idEstufa}}).then((response) => {
+       axios.post(address,{Operation: "getEstufa",Content:{idEmpresa: 1, idEstufa: route.params.idEstufa}}).then((response) => {
           const dados = response.data;
-          //console.log(dados);
-          setdados(dados);
-          setDadosGraf(dados);
-          const tempArray = dados.map((data: number[]) => {console.log(data[2]);return(data[2])});
-          console.log(tempArray)
-          setTemp(tempArray);
+          const dadosMapeados : historico[] = dados.map((pesquisa : any) => {
+            return {
+            idEstufa: pesquisa[0],
+            data: pesquisa[1],
+            temperatura: pesquisa[2],
+            umidade: pesquisa[3]
+            }
+          })
+          console.log(dadosMapeados)
+          setdados(dadosMapeados);
+          setDadosGraf(dadosMapeados.reverse());
+          const tempArray = dadosMapeados.map((temperatura) => {return(temperatura.temperatura)});
           const tempMax = Math.max(...tempArray) + 5;
+          console.log(TempMax)
           setTempMax(tempMax);
-          const pag = dados.length - 5 
+          const pag = dados.length - 5  
           setPag(pag)
           const ultDado = dados[dados.length - 1] 
           setUltTemp(ultDado[2])
@@ -96,29 +108,29 @@ export default function EstufaProfile({route}) {
     //   }
     //   console.log(pag)
     // }
-    const previous = () => {
-      if (pag - 5 >= 0) {
-        const pag1 = pag - 5;
-        setPag(pag1);
-      }else{
-        const pag1 = 0;
-        setPag(pag1);
-      }
-    };
+    // const previous = () => {
+    //   if (pag - 5 >= 0) {
+    //     const pag1 = pag - 5;
+    //     setPag(pag1);
+    //   }else{
+    //     const pag1 = 0;
+    //     setPag(pag1);
+    //   }
+    // };
   
-    const next = () => {
-      if (pag + 5 <= dados.length - 5) {
-        const pag1 = pag + 5;
-        setPag(pag1);
-      }
-    };
+    // const next = () => {
+    //   if (pag + 5 <= dados.length - 5) {
+    //     const pag1 = pag + 5;
+    //     setPag(pag1);
+    //   }
+    // };
   
     useEffect(() => {
       if(loaded){ 
         const dadosGraf = dados.slice(pag, pag + 5);
         setDadosGraf(dadosGraf);
-        const tempArray = dadosGraf.map(({ Temp }) => Temp);
-        const tempMax = Math.max(...tempArray) + 5;
+        const tempArray = dadosGraf.map(({ temperatura }) => temperatura);
+        const tempMax = Math.max(...tempArray) + 1;
         setTempMax(tempMax);
       }
     }, [pag, dados]);
@@ -126,7 +138,7 @@ export default function EstufaProfile({route}) {
     
     return (
         <SafeAreaView> 
-          <ScrollView>
+         <ScrollView>
           <UltAttNoti UltimaData={currentDate} OnClick={() => SetReload(Reload + 1)} navigation={navigation}/>
             <View style = {{flexDirection: "row", height: 150, marginHorizontal: 5, justifyContent: "space-between"}}>
               <Paper style={{flex: 1, padding: 10}}>
@@ -151,21 +163,21 @@ export default function EstufaProfile({route}) {
             <Paper style={{height: 500}}>
                 {loaded ? (
                   <Swiper loop={false}>
-                    <View style={{marginTop: -30}}>
-                      <VictoryChart maxDomain={{y :TempMax}} theme={VictoryTheme.material}> 
+                   <View style={{marginTop: -30}}>
+                     <VictoryChart domainPadding={{x: [0, 0], y: 5}} theme={VictoryTheme.material}> 
                           <VictoryAxis
                             dependentAxis
                             tickFormat={(x) => `${x}°C`}
                             label=""
                           />
-                          <VictoryAxis
+                         <VictoryAxis
                             tickFormat={(x) => new Date(x).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             style={{axisLabel: {padding: 30}, tickLabels: {angle: -90, padding: 15}}}
-                          />
+                          /> 
                         <VictoryArea
                           data={dadosGraf}
-                          x={"Momento"}
-                          y={"Temp"}
+                          x={"data"}
+                          y={"temperatura"}
                           interpolation="natural"
                           animate = {{
                             onLoad:{
@@ -180,42 +192,34 @@ export default function EstufaProfile({route}) {
                               <Stop offset="100%" stopColor="orange" stopOpacity={0} />
                             </LinearGradient>
                         </Defs> 
-                      </VictoryChart>
+                      </VictoryChart> 
                       <View style={{flexDirection:"row", backgroundColor: 'red'}}>  
-                        {clickable ? (
-                          <View>
-                            <Button title="Prev" onPress={previous} /> 
-                            <Button title="Next" onPress={next} />
-                          </View>
-                        ) : (
-                          <TouchableOpacity style= {{left: 220}} onPress={() => {previous(); setClickable(true)}}>
-                            <View style={{backgroundColor: "aliceblue"}}>
-                              <MaterialIcons size={36} name="zoom-in"/>
-                            </View>
-                          </TouchableOpacity>
-                        )}
+                        
                       
                       </View>
                     </View>
                     <View>
                     <Text style = {{fontWeight: "bold", margin:10}}>Ultimos Registros: </Text>
+                    {/* Tabela de datas */}
                     <ScrollView style = {{height: 300, backgroundColor: 'aliceblue'}} >
                           {dados.map((data, index) =>(
                           <View key={index} style = {{flexDirection:"row"}}>
-                            <Text style = {style.dados}>{new Date(data.Momento).toLocaleString([], {day: "2-digit", month:"2-digit"})}</Text>
+                            {/* Data e Hora */}
+                            <Text style = {style.dados}>{new Date(data.data).toLocaleString([], {day: "2-digit", month:"2-digit"})}</Text>
                             <Divider />
-                            <Text style = {style.dados}>{new Date(data.Momento).toLocaleTimeString([],{hour: "2-digit", minute: "2-digit"})}</Text>
+                            <Text style = {style.dados}>{new Date(data.data).toLocaleTimeString([],{hour: "2-digit", minute: "2-digit"})}</Text>
                             <Divider />
-                            <Text style = {style.dados}>{data.Temp}ºC</Text>
+                            {/* Temperatura e umidade da tabela */}
+                            <Text style = {style.dados}>{data.temperatura}ºC</Text>
                             <Divider />
-                            <Text style = {style.dados}>{data.Umi}%</Text>
+                            <Text style = {style.dados}>{data.umidade}%</Text>
                           </View>))}
                     </ScrollView>
                   </View>
                 </Swiper>
                 ) : (<Text>Loading...</Text>)}                
             </Paper>
-          </ScrollView>
+          </ScrollView> 
         </SafeAreaView>
     )
 };
