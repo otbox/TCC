@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, Text } from "react-native";
 import { Defs, Stop,LinearGradient } from "react-native-svg";
-import { VictoryArea,VictoryAxis,VictoryChart, VictoryContainer,VictoryTheme } from "victory-native";
+import { VictoryArea,VictoryAxis,VictoryChart,VictoryTheme } from "victory-native";
 import ApiVerify from "../components/ApiVerify";
 import Paper from "../components/Paper";
 import UltAttNoti from "../components/UltAttNoti";
@@ -12,7 +12,7 @@ import Divider from "../components/Divider";
 import Swiper from "react-native-swiper";
 import { Button2 } from "../components/Button2";
 import PdfPageGenerator from "../components/PdfPageGenerator";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import NotificationBall from "../components/NotificationBall";
 
 interface EstufaPropsProf {
     caution? : Number,
@@ -21,7 +21,7 @@ interface EstufaPropsProf {
     umid? : Number, 
 }
 
-interface historico {
+export interface historico {
   id: number,
   temperatura: number,
   data: Date,
@@ -39,17 +39,11 @@ export default function EstufaProfile({route}) {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [TempMax, setTempMax] = useState<number>();
     const [dadosGraf, setDadosGraf] = useState<any[]>([])
-    const {ultTemp0, ultUmid0,nome, diasCultivo} = route.params;
+    const {ultTemp0, ultUmid0,nome, diasCultivo, statusName} = route.params;
     const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
     const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
     const address = "https://otboxserver.000webhostapp.com/Connect.php";
 
-    interface historico {
-      idEstufa : number,
-      data : Date,
-      temperatura: number, 
-      umidade: number
-    }
 
     useEffect(() => {
        axios.post(address,{Operation: "getEstufa",Content:{idEmpresa: 1, idEstufa: route.params.idEstufa}}).then((response) => {
@@ -62,7 +56,6 @@ export default function EstufaProfile({route}) {
             umidade: pesquisa[3]
             }
           })
-          console.log(dadosMapeados)
           setdados(dadosMapeados);
           setDadosGraf(dadosMapeados.reverse());
           const tempArray = dadosMapeados.map((temperatura) => {return(temperatura.temperatura)});
@@ -71,7 +64,7 @@ export default function EstufaProfile({route}) {
           setTempMax(tempMax);
           const pag = dados.length - 5  
           setPag(pag)
-          const ultDado = dados[dados.length - 1] 
+          const ultDado = dados[0] 
           setUltTemp(ultDado[2])
           setUltUmid(ultDado[3])
           setLoaded(true)
@@ -140,10 +133,16 @@ export default function EstufaProfile({route}) {
         <SafeAreaView> 
          <ScrollView>
           <UltAttNoti UltimaData={currentDate} OnClick={() => SetReload(Reload + 1)} navigation={navigation}/>
-            <View style = {{flexDirection: "row", height: 150, marginHorizontal: 5, justifyContent: "space-between"}}>
-              <Paper style={{flex: 1, padding: 10}}>
-                {loaded ? (<Button2 height={120} width={175} onClick={() => PdfPageGenerator({data: dados, nomeEstufa: nome})} label={"PDFGerator"}/>) : (<Text>Loading...</Text>)}   
-              </Paper>
+            <View style = {{flex: 1,flexDirection: "row", height: 150, marginHorizontal: 5, justifyContent: "space-between"}}>
+              <View>
+                <Paper style={{width: 200, justifyContent: 'center', flex: 1, padding: 10}}>
+                  <NotificationBall Status= {statusName} />  
+                  <Text style={{fontSize: 24}}>{statusName}</Text> 
+                </Paper>
+                <Paper style={{flex: 1, padding: 10}}>
+                  {loaded ? (<Button2 height={100} width={180} onClick={() => PdfPageGenerator({data: dados, nomeEstufa: nome})} label={"Gerar PDF"}/>) : (<Text>Loading...</Text>)}   
+                </Paper>
+              </View>
               <View>
                 <Paper style={{flex: 1, padding: 14}}>
                   <Text style= {{marginTop: -5}}>Ultima Atualização:</Text>
@@ -163,7 +162,8 @@ export default function EstufaProfile({route}) {
             <Paper style={{height: 500}}>
                 {loaded ? (
                   <Swiper loop={false}>
-                   <View style={{marginTop: -30}}>
+                    {/* Swiper 1 = Temp Graf */}
+                    <View style={{marginTop: -30}}>
                      <VictoryChart domainPadding={{x: [0, 0], y: 5}} theme={VictoryTheme.material}> 
                           <VictoryAxis
                             dependentAxis
@@ -193,29 +193,58 @@ export default function EstufaProfile({route}) {
                             </LinearGradient>
                         </Defs> 
                       </VictoryChart> 
-                      <View style={{flexDirection:"row", backgroundColor: 'red'}}>  
-                        
-                      
-                      </View>
                     </View>
+                    {/* Swiper 2 = Umid Graf */}
+                    <View style={{marginTop: -30}}>
+                     <VictoryChart domainPadding={{x: [0, 0], y: 15}} theme={VictoryTheme.material}> 
+                          <VictoryAxis
+                            dependentAxis
+                            tickFormat={(x) => `${x}°%`}
+                            label=""
+                          />
+                         <VictoryAxis
+                            tickFormat={(x) => new Date(x).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            style={{axisLabel: {padding: 30}, tickLabels: {angle: -90, padding: 15}}}
+                          /> 
+                        <VictoryArea
+                          data={dadosGraf}
+                          x={"data"}
+                          y={"umidade"}
+                          interpolation="natural"
+                          animate = {{
+                            onLoad:{
+                              duration: 1500,
+                            }
+                          }}
+                          style={{ data: { fill: 'url(#gradient)' }, labels: {fontSize: 15}}}
+                        />
+                          <Defs>
+                            <LinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                              <Stop offset="10%" stopColor="blue" stopOpacity={1} />
+                              <Stop offset="100%" stopColor="blue" stopOpacity={0} />
+                            </LinearGradient>
+                        </Defs> 
+                      </VictoryChart> 
+                    </View>
+                    {/* Swiper 3 = Tabela */}
                     <View>
-                    <Text style = {{fontWeight: "bold", margin:10}}>Ultimos Registros: </Text>
-                    {/* Tabela de datas */}
-                    <ScrollView style = {{height: 300, backgroundColor: 'aliceblue'}} >
-                          {dados.map((data, index) =>(
-                          <View key={index} style = {{flexDirection:"row"}}>
-                            {/* Data e Hora */}
-                            <Text style = {style.dados}>{new Date(data.data).toLocaleString([], {day: "2-digit", month:"2-digit"})}</Text>
-                            <Divider />
-                            <Text style = {style.dados}>{new Date(data.data).toLocaleTimeString([],{hour: "2-digit", minute: "2-digit"})}</Text>
-                            <Divider />
-                            {/* Temperatura e umidade da tabela */}
-                            <Text style = {style.dados}>{data.temperatura}ºC</Text>
-                            <Divider />
-                            <Text style = {style.dados}>{data.umidade}%</Text>
-                          </View>))}
-                    </ScrollView>
-                  </View>
+                      <Text style = {{fontWeight: "bold", margin:10}}>Ultimos Registros: </Text>
+                      {/* Tabela de datas */}
+                      <ScrollView style = {{height: 300, backgroundColor: 'aliceblue'}} >
+                            {dados.map((data, index) =>(
+                            <View key={index} style = {{flexDirection:"row"}}>
+                              {/* Data e Hora */}
+                              <Text style = {style.dados}>{new Date(data.data).toLocaleString([], {day: "2-digit", month:"2-digit"})}</Text>
+                              <Divider />
+                              <Text style = {style.dados}>{new Date(data.data).toLocaleTimeString([],{hour: "2-digit", minute: "2-digit"})}</Text>
+                              <Divider />
+                              {/* Temperatura e umidade da tabela */}
+                              <Text style = {style.dados}>{data.temperatura}ºC</Text>
+                              <Divider />
+                              <Text style = {style.dados}>{data.umidade}%</Text>
+                            </View>))}
+                      </ScrollView>
+                    </View>
                 </Swiper>
                 ) : (<Text>Loading...</Text>)}                
             </Paper>

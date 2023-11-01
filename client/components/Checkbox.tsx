@@ -1,6 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState} from "react"
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Text1 from './Text';
 
 type checkboxProps = {

@@ -20,7 +20,8 @@ export default function EstufaButton({nome , temp, umid, caution, onClick, idEst
     const navigation = useNavigation();
     const [StatusBall, setStatusBall] = useState<NotificationBallProps>({Status: "Maintenance"})
     const AcessandoEstufa = () => {
-        navigation.navigate("EstufaProfile", {idEmpresa: idEmpresa,idEstufa: idEstufa, nome: nome, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid});
+        const statusName = StatusBall.Status;
+        navigation.navigate("EstufaProfile", {idEmpresa: idEmpresa,idEstufa: idEstufa, nome: nome, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid, statusName});
     }
     
     useEffect(() => {

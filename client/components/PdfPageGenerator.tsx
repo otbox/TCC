@@ -1,8 +1,9 @@
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
+import { historico } from "../pages/EstufaProfile";
 
 interface pdfProps {
-    data: any[];
+    data: historico[];
     nomeEstufa?: string;
 }
 
@@ -45,10 +46,10 @@ export default function PdfPageGenerator({data, nomeEstufa} : pdfProps) {
                     return (
                         `
                         <tr>
-                            <td>${new Date(dados.Momento).toLocaleString([], {day: "2-digit", month:"2-digit", year:"2-digit"})}</td>
-                            <td>${new Date(dados.Momento).toLocaleString([], {hour: "2-digit", minute:"2-digit"})}</td>
-                            <td>${dados.Temp}</td>
-                            <td>${dados.Umi}</td>
+                            <td>${new Date(dados.data).toLocaleString([], {day: "2-digit", month:"2-digit", year:"2-digit"})}</td>
+                            <td>${new Date(dados.data).toLocaleString([], {hour: "2-digit", minute:"2-digit"})}</td>
+                            <td>${dados.temperatura}</td>
+                            <td>${dados.umidade}</td>
                         </tr>
                         `
                         )

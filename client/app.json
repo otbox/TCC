@@ -1,14 +1,12 @@
 {
   "expo": {
-    "name": "client",
+    "name": "EstufasManagement",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/estufa.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -19,12 +17,16 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.otbox.client"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f489920a-1710-4144-94f7-ea615ad3fcf5"
+      }
     }
   }
 }
