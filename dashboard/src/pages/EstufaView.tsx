@@ -4,7 +4,7 @@ import { PostToPHP } from "../components/Api";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DataGrid, GridColDef} from "@mui/x-data-grid";
 import BackButton from "../components/BackButton";
-import { Button, Divider, Paper, TextField } from "@mui/material";
+import { Button, Paper, TextField } from "@mui/material";
 
 import downloadPdfButton from "../components/pdfGenerator";
 import NotificationBall from "../components/EstufaButton/NotificationBall";
@@ -109,10 +109,6 @@ export default function EstufaView() {
               {ErrorAlert.map((alert, index) => (
                 <ErrorAlertC key={index} text={alert.text} tipo={alert.tipo}/>
               ))}
-              </div>
-            <div style={{display: 'flex', justifyContent: 'space-between', margin: 10}}>
-                <p>Hoje é o Dia {diasCultivo} do Cultivo</p>
-                
             </div>
             <div style={{display: "flex", flex: 1, justifyContent: "center"}}>
                 <ResponsiveContainer width={"80%"} height={250} >
@@ -162,26 +158,29 @@ export default function EstufaView() {
                         <p style={{fontSize: '1rem'}}>Nome da Estufa : {nome}</p>
                         <p>Ultima atualização: {TimeNow}</p>
                         <hr />
-                        <div style={{display: 'flex', height: '85%', marginTop: 5, flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <div style={{fontSize: 18, display: 'flex', height: '85%', marginTop: 5, flexDirection: 'row', justifyContent: 'space-between'}}>
                             <div style={{flex:1}}>
-                                <p>Dia de Cultivo nº</p>
-                                <p>{diasCultivo}</p>
+                                <p>Dias de Cultivo nº</p>
+                                <p style={{fontSize: 40, fontWeight:'400', textAlign: 'center'}}>{diasCultivo}</p>
                             </div> 
-                            <div style={{ flex: 1,height: '80%',border: 'solid', borderWidth: 2, borderRight: 0, borderTop: 0, borderBottom:0, borderColor: 'rgba(40, 40, 40, 0.6)'}}>
-                                <p>teste</p>
-                                <NotificationBall Status={status}/>
+                            <div style={{ flex: 1,height: '80%',border: 'solid', paddingLeft: 10, borderWidth: 2, borderRight: 0, borderTop: 0, borderBottom:0, borderColor: 'rgba(40, 40, 40, 0.6)'}}>
+                                <p>Status: </p>
+                                <div style={{paddingTop: 15}}>
+                                    <NotificationBall Status={status}/>
+                                    <p style={{marginTop: -15, marginLeft: 30, fontSize: 30}}>{status}</p>
+                                </div>
                             </div>
                         </div>
                     </Paper>
-                    <Paper elevation={2} style={{height: '45%'}}>
+                    <Paper elevation={2} style={{height: '45%', padding: 10}}>
                         <div>
-                            <p>Controle de Temperatura e Humidade</p>
-                            <div style={{display: 'flex', flex: 1, justifyContent: 'space-around'}}>
-                                <TextField onChange={(e) => setTempAlvo(Number(e.target.value))} value={tempAlvo} color="error" variant={'filled'} label='temperatura' type="number"/>
-                                <TextField onChange={(e) => setUmiAlvo(Number(e.target.value))} value={umiAlvo}  color="info" variant={'filled'} label='humidade' type="number"/>
+                            <p style={{fontSize: 20}}>Controle de Temperatura e Umidade</p>
+                            <hr />
+                            <div style={{marginTop: 10,display: 'flex', flex: 1, justifyContent: 'space-around'}}>
+                                <TextField style={{marginRight: 10}} onChange={(e) => setTempAlvo(Number(e.target.value))} value={tempAlvo} color="error" variant={'filled'} label='temperatura' type="number"/>
+                                <TextField style={{marginLeft: 10}} onChange={(e) => setUmiAlvo(Number(e.target.value))} value={umiAlvo}  color="info" variant={'filled'} label='humidade' type="number"/>
                             </div>
-                            <Button variant="contained" onClick={changeAlvos} >Aplicar</Button>
-                            <p>{status}</p>
+                            <Button style={{bottom: -20}} variant="contained" onClick={changeAlvos} >Aplicar</Button>
                         </div>
                     </Paper>
                 </div>
