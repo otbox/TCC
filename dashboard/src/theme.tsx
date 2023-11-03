@@ -9,7 +9,7 @@ const theme = createTheme(
             },
             error:{
                 main: red[500]
-            }
+            },
         },
         typography: {
             fontSize: 18

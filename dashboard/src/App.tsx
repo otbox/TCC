@@ -53,7 +53,6 @@ function App() {
     : ''
   },[SuperUser])
 
-  useEffect(() => {})
   return (
     <>
       <header>

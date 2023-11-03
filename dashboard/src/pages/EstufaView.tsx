@@ -4,9 +4,11 @@ import { PostToPHP } from "../components/Api";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DataGrid, GridColDef} from "@mui/x-data-grid";
 import BackButton from "../components/BackButton";
-import { Paper } from "@mui/material";
+import { Button, Divider, Paper, TextField } from "@mui/material";
 
 import downloadPdfButton from "../components/pdfGenerator";
+import NotificationBall from "../components/EstufaButton/NotificationBall";
+import { ErrorAlertC } from "../components/Alerts";
 
 export interface EstufaProps {
     idEmpresa: number,
@@ -37,10 +39,32 @@ const columns: GridColDef[] = [
 export default function EstufaView() {
     //inicializaçõa de variaveis do Dashboard
     const EstufaInfoRoute = useLocation().state as EstufaProps;
-    const {idEmpresa, idEstufa, diasCultivo, nome, status} = EstufaInfoRoute
+    const {idEmpresa, idEstufa, diasCultivo, nome, status, temperatuta, umidade} = EstufaInfoRoute
+    const [ErrorAlert, setErrorAlert] = useState<{text: string, tipo: "error" | "success"}[]>([]);
     //Variveis Próprias 
     const [TimeNow, setTimeNow] = useState<string>()
     const [historico, setHistorico] = useState<historico[]>([])
+    const [tempAlvo, setTempAlvo] = useState<number>(temperatuta);
+    const [umiAlvo, setUmiAlvo] = useState<number>(umidade);
+
+    const changeAlvos = () => {
+        console.log
+        PostToPHP({Operation : 'UpdateAlvos', Content:{idEstufa, tempAlvo, umiAlvo}}).then((result : any) => {
+            console.log(result)
+            if (result == 'Success'){
+                handleShowAlertError('Temperatura e Umidade desejadas atualizadas com Sucesso','success');
+            }else{
+                handleShowAlertError('Erro na Atualização', 'error');
+            }
+        }).catch((err) => {
+            handleShowAlertError('Erro na Atualização' + err, 'error');
+        })
+    }
+
+    const handleShowAlertError = (alertText : string, TipoAlert: "error" | "success") => {
+        setErrorAlert(prevAlerts => [...prevAlerts, {text: alertText, tipo: TipoAlert}]);
+    }
+
     useEffect(() => {
         const now = new Date();
         const second = now.getSeconds()
@@ -81,9 +105,14 @@ export default function EstufaView() {
     return (
         <> 
             <BackButton />
+            <div id="notifysdiv">
+              {ErrorAlert.map((alert, index) => (
+                <ErrorAlertC key={index} text={alert.text} tipo={alert.tipo}/>
+              ))}
+              </div>
             <div style={{display: 'flex', justifyContent: 'space-between', margin: 10}}>
                 <p>Hoje é o Dia {diasCultivo} do Cultivo</p>
-                <p>Ultima atualização: {TimeNow}</p>
+                
             </div>
             <div style={{display: "flex", flex: 1, justifyContent: "center"}}>
                 <ResponsiveContainer width={"80%"} height={250} >
@@ -129,15 +158,29 @@ export default function EstufaView() {
                 />
                 </div>
                 <div style={{display:'flex',flexDirection: "column" , marginLeft: 20, justifyContent: 'space-between', height: 420, width: '50%'}}>
-                    <Paper elevation={2} style={{height: '45%'}}>
-                        <div>
-                            <p>{nome}</p>
-                            <p>Dia de Cultivo nº</p>
-                            <p>{diasCultivo}</p>
+                    <Paper elevation={2} style={{height: '45%', padding: 5}}>
+                        <p style={{fontSize: '1rem'}}>Nome da Estufa : {nome}</p>
+                        <p>Ultima atualização: {TimeNow}</p>
+                        <hr />
+                        <div style={{display: 'flex', height: '85%', marginTop: 5, flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <div style={{flex:1}}>
+                                <p>Dia de Cultivo nº</p>
+                                <p>{diasCultivo}</p>
+                            </div> 
+                            <div style={{ flex: 1,height: '80%',border: 'solid', borderWidth: 2, borderRight: 0, borderTop: 0, borderBottom:0, borderColor: 'rgba(40, 40, 40, 0.6)'}}>
+                                <p>teste</p>
+                                <NotificationBall Status={status}/>
+                            </div>
                         </div>
                     </Paper>
                     <Paper elevation={2} style={{height: '45%'}}>
                         <div>
+                            <p>Controle de Temperatura e Humidade</p>
+                            <div style={{display: 'flex', flex: 1, justifyContent: 'space-around'}}>
+                                <TextField onChange={(e) => setTempAlvo(Number(e.target.value))} value={tempAlvo} color="error" variant={'filled'} label='temperatura' type="number"/>
+                                <TextField onChange={(e) => setUmiAlvo(Number(e.target.value))} value={umiAlvo}  color="info" variant={'filled'} label='humidade' type="number"/>
+                            </div>
+                            <Button variant="contained" onClick={changeAlvos} >Aplicar</Button>
                             <p>{status}</p>
                         </div>
                     </Paper>

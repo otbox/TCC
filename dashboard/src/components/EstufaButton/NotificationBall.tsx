@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 
 export type NotificationBallProps = {
-    Status : "Working" | "Suspended" | "Off" | "Maintenance"
+    Status : "Working" | "Suspended" | "Off" | "Maintenance" | string
 } 
 
 export default function NotificationBall({Status} : NotificationBallProps) {
