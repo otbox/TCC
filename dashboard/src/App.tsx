@@ -9,6 +9,7 @@ import { Button } from "@mui/material";
 import { ExitButton } from "./components/BackButton";
 //import EstufaButton from "./components/EstufaButton/EstufaButton";
 
+//Contrução da Home do site 
 
 function App() {
   interface StateProps{
@@ -32,6 +33,7 @@ function App() {
   }
   }, []);
 
+  //Aquisição das Estufas da Empresa, para Exibi-las depois
   useEffect(() => {
     SuperUser ? 
     PostToPHP({Operation: 'getAllEstufas', Content: {
