@@ -34,8 +34,8 @@ export default function Home() {
                 idEmpresa : item[1],
                 nome : item[2],
                 diasCultivo : item[4],
-                temperatura : item[5],
-                umidade : item[6],
+                temperatura : item[9],
+                umidade : item[10],
                 status : item[7],
                 notifs : item[8],
             }})

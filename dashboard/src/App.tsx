@@ -18,9 +18,16 @@ function App() {
   const { result } = useLocation().state as StateProps;
   const [SuperUser, setSuperUser] = useState<UserInterface>()
   const [EstufaList, setEstufaList] = useState<EstufaProps[]>()
+  const [TimeNow, setTimeNow] = useState<string>()
   const nav = useNavigate()
    
   useEffect(() => {
+    const now = new Date();
+    const second = now.getSeconds()
+    const min = now.getMinutes()
+    const hour = now.getHours()
+    setTimeNow(String(hour) + ':' + String(min)+ ':' + String(second))
+
     if (result && result[0]) {
     console.log("foi " + result[0]);
     setSuperUser({
@@ -44,12 +51,12 @@ function App() {
         idEmpresa : item[1],
         nome : item[2],
         diasCultivo : item[4],
-        temperatuta : item[5],
-        umidade : item[6],
+        temperatuta : item[9],
+        umidade : item[10],
         status : item[7],
         notifs : item[8],
+        ultdata: item[11]
       }))
-      console.log(mappedResult)
       setEstufaList(mappedResult);
     })
     : ''
@@ -59,7 +66,7 @@ function App() {
     <>
       <header>
         <ExitButton />
-        <p style={{fontSize: '4vw'}}>DashBoard</p>
+        <p style={{fontSize: '4vw'}}>Painel de Controle</p>
         <div className="menu">
           <Button onClick={() => {nav('/userManagement', {state: {params: SuperUser?.idEmpresa}})}} style={{color: 'black'}} variant="outlined" >Gerenciar Usuários</Button>
           {/* <HoverButton key={1} title="Úsuarios" texts={menu1} params= {SuperUser?.idEmpresa } /> */}
@@ -67,7 +74,7 @@ function App() {
       </header>
       <hr />
       <div className="DashBoard-Container">
-        <p>Ultima Atualização:</p>
+        <p>Ultima Atualização: {TimeNow}</p>
         {EstufaList ? EstufaList.map((item, index) => {return (
           <EstufaButton 
             idEmpresa={item.idEmpresa} 

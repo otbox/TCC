@@ -22,16 +22,16 @@ export default function EstufaButton({idEmpresa, idEstufa, diasCultivo, nome, te
         console.log('status'+status)
         switch(status){
             case "0":
-                setStatusBall({Status: "Off"})
+                setStatusBall({Status: "Desligado"})
             break
             case "1":
-                setStatusBall({Status: "Working"})
+                setStatusBall({Status: "Ajustando"})
             break
             case "2":
-                setStatusBall({Status: "Suspended"})
+                setStatusBall({Status: "Ideal"})
             break
             case "3":
-                setStatusBall({Status: "Maintenance"})
+                setStatusBall({Status: "Manutenção"})
             break
         }
         console.log(StatusBall)
@@ -43,7 +43,7 @@ export default function EstufaButton({idEmpresa, idEstufa, diasCultivo, nome, te
             <p id="title">{nome}</p>
             <div style={{display: 'flex', width: '100%', justifyContent: "space-between"}}>
                 <div className="info">  
-                    <div style={{display: "block",width: '30%', marginRight: '40px'}}>
+                    <div style={{display: "block",width: 500, marginRight: '40px'}}>
                         <p id="pCultivo"    >Dia de Cultivo: {diasCultivo}</p>
                         <div style={{justifyContent: "space-between", marginRight:'20px'}}>
                             <div>

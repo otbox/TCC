@@ -151,6 +151,11 @@ export default function EstufaView() {
                     }
                     }}
                     pageSizeOptions={[5, 10]}
+                    slotProps={{
+                        pagination: {
+                          labelRowsPerPage: "Número de linhas por página",
+                        }
+                       }}
                 />
                 </div>
                 <div style={{display:'flex',flexDirection: "column" , marginLeft: 20, justifyContent: 'space-between', height: 420, width: '50%'}}>
@@ -168,6 +173,8 @@ export default function EstufaView() {
                                 <div style={{paddingTop: 15}}>
                                     <NotificationBall Status={status}/>
                                     <p style={{marginTop: -15, marginLeft: 30, fontSize: 30}}>{status}</p>
+                                    {status === 'Ajustando' ? <p>Trabalhando para alcançar o ideal</p> : ''}
+                                    {status === 'Ajustando' ? <p>Parâmetros estão ideais</p> : ''}
                                 </div>
                             </div>
                         </div>
@@ -177,8 +184,8 @@ export default function EstufaView() {
                             <p style={{fontSize: 20}}>Controle de Temperatura e Umidade</p>
                             <hr />
                             <div style={{marginTop: 10,display: 'flex', flex: 1, justifyContent: 'space-around'}}>
-                                <TextField style={{marginRight: 10}} onChange={(e) => setTempAlvo(Number(e.target.value))} value={tempAlvo} color="error" variant={'filled'} label='temperatura' type="number"/>
-                                <TextField style={{marginLeft: 10}} onChange={(e) => setUmiAlvo(Number(e.target.value))} value={umiAlvo}  color="info" variant={'filled'} label='humidade' type="number"/>
+                                <TextField style={{marginRight: 10}} onChange={(e) => setTempAlvo(Number(e.target.value))} value={tempAlvo} color="error" variant={'filled'} label='Temperatura' type="number"/>
+                                <TextField style={{marginLeft: 10}} onChange={(e) => setUmiAlvo(Number(e.target.value))} value={umiAlvo}  color="info" variant={'filled'} label='Umidade' type="number"/>
                             </div>
                             <Button style={{bottom: -20}} variant="contained" onClick={changeAlvos} >Aplicar</Button>
                         </div>
