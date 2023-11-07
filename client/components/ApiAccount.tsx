@@ -4,14 +4,14 @@ import { UserType } from "../shared/types/UserType";
 import { useAppDispatch, useAppSelector } from "../pages/hooks";
 import { setUserAction } from "../shared/Store/reducers/userReducer";
 
+//Sistema de comunicação entre banco atraves do post com o app 
+
 interface ApiProps {
     id?: number;
     name?: string; 
     passwd?: string; 
     address: string;
 }
-
-
 
 export const ReceiveAccounts = async (props : ApiProps) => {
     return await axios.get(props.address + "getRegisters");
