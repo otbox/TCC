@@ -27,6 +27,7 @@ export default function Login() {
   const handleShowAlertError = (alertText : string, TipoAlert: "error" | "success" | "info") => {
     setErrorAlert(prevAlerts => [...prevAlerts, {text: alertText, tipo: TipoAlert}]);
   }
+
   const VerifyAccount = (user: string, passw: string) => {
     if (user == null || passw == null) {
       handleShowAlertError("Insira um Usuário e Senha", 'info');
@@ -41,6 +42,7 @@ export default function Login() {
     })
       .then((result : any) => {
         console.log(result);
+        //aquisição do resultado do banco e depois a definir em variaveis, [][] é necessário por causa do array de objetos vindos pelo php
         const phpNome = result[0][3];
         const phpPassw = result[0][4];
         const phpAtivo = result[0][5];
