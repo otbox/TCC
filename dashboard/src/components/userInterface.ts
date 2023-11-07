@@ -1,3 +1,4 @@
+//Definição das propriedades do Usuário
 export default  interface UserInterface {
     firstLetter?: string,
     name?: string,
