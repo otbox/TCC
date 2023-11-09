@@ -14,29 +14,31 @@ interface EstufaProps {
     Status?: string,
     DiasCultivo?: Number,
     idEmpresa: Number,
+    tempAlvo: Number,
+    umidAlvo: Number,
 }
 
-export default function EstufaButton({nome , temp, umid, caution, onClick, idEstufa, Status, DiasCultivo, idEmpresa} : EstufaProps) {
+export default function EstufaButton({nome , temp, umid, caution, onClick, idEstufa, Status, DiasCultivo, idEmpresa, umidAlvo, tempAlvo} : EstufaProps) {
     const navigation = useNavigation();
     const [StatusBall, setStatusBall] = useState<NotificationBallProps>({Status: "Maintenance"})
     const AcessandoEstufa = () => {
         const statusName = StatusBall.Status;
-        navigation.navigate("EstufaProfile", {idEmpresa: idEmpresa,idEstufa: idEstufa, nome: nome, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid, statusName});
+        navigation.navigate("EstufaProfile", {idEmpresa: idEmpresa,idEstufa: idEstufa, nome: nome, umidAlvo, tempAlvo, diasCultivo: DiasCultivo, ultTemp0: temp, ultUmid0: umid, statusName});
     }
     
     useEffect(() => {
         switch(Status){
             case "0":
-                setStatusBall({Status: "Off"})
+                setStatusBall({Status: "Desligado"})
             break
             case "1":
-                setStatusBall({Status: "Working"})
+                setStatusBall({Status: "Ideal"})
             break
             case "2":
-                setStatusBall({Status: "Suspended"})
+                setStatusBall({Status: "Ajustando"})
             break
             case "3":
-                setStatusBall({Status: "Maintenance"})
+                setStatusBall({Status: "Manutenção"})
             break
         }
     }, [Status])

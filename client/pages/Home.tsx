@@ -35,10 +35,13 @@ export default function Home() {
                 nome : item[2],
                 diasCultivo : item[4],
                 temperatura : item[9],
+                tempAlvo: item[5],
+                umidAlvo: item[6],
                 umidade : item[10],
                 status : item[7],
                 notifs : item[8],
             }})
+            console.log(mappedResult)
             SetEstufas(mappedResult)
             setCurrentDate(new Date());
         })
@@ -70,7 +73,7 @@ export default function Home() {
                 <View style = {{backgroundColor: '#F0F2EF'}}>
                     {Array.isArray(Estufas) && Estufas.map((data) => {
                         return(
-                            <EstufaButton idEmpresa={data.idEmpresa}  DiasCultivo={data.diasCultivo} Status={data.status} key={data.idEstufa} idEstufa={data.idEstufa} nome={data.nome} temp={data.temperatura} umid={data.umidade}/>
+                            <EstufaButton umidAlvo={data.umidAlvo} tempAlvo={data.tempAlvo} idEmpresa={data.idEmpresa}  DiasCultivo={data.diasCultivo} Status={data.status} key={data.idEstufa} idEstufa={data.idEstufa} nome={data.nome} temp={data.temperatura} umid={data.umidade}/>
                         ) 
                     })}
 

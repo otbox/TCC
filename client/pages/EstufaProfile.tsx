@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, Text } from "react-native";
 import { Defs, Stop,LinearGradient } from "react-native-svg";
-import { VictoryArea,VictoryAxis,VictoryChart,VictoryTheme } from "victory-native";
+import { VictoryArea,VictoryAxis,VictoryChart,VictoryLine,VictoryTheme } from "victory-native";
 import ApiVerify from "../components/ApiVerify";
 import Paper from "../components/Paper";
 import UltAttNoti from "../components/UltAttNoti";
@@ -25,43 +25,52 @@ export interface historico {
   id: number,
   temperatura: number,
   data: Date,
-  umidade: string,
+  umidade: number,
 }
 
-const lineData = [{value: 0},{value: 20},{value: 18},{value: 40},{value: 36},{value: 60},{value: 54},{value: 85}];
 
 export default function EstufaProfile({route}) {
+  interface historico {
+    id: number,
+    temperatura: number,
+    data: Date,
+    umidade: number,
+  }
     const navigation = useNavigation();
     const [Reload, SetReload] = useState<number>(1)
     const [loaded, setLoaded] = useState<boolean>(false)
     const [dados, setdados] = useState<historico[]>([]);
     const [pag, setPag] = useState<number>(20)
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [TempMax, setTempMax] = useState<number>();
+    const [TempMaxGraf, setTempMaxGraf] = useState<number>(50);
+    const [TempMin, setTempMin] = useState<number>(0);
     const [dadosGraf, setDadosGraf] = useState<any[]>([])
-    const {ultTemp0, ultUmid0,nome, diasCultivo, statusName} = route.params;
+    const {ultTemp0, ultUmid0,nome, diasCultivo, statusName, tempAlvo, umidAlvo} = route.params;
+    const tempAlvoFloat = parseFloat(tempAlvo);
     const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
     const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
+
     const address = "https://otboxserver.000webhostapp.com/Connect.php";
 
 
     useEffect(() => {
        axios.post(address,{Operation: "getEstufa",Content:{idEmpresa: 1, idEstufa: route.params.idEstufa}}).then((response) => {
           const dados = response.data;
-          const dadosMapeados : historico[] = dados.map((pesquisa : any) => {
+          const dadosMapeados : any = dados.map((pesquisa : any) => {
             return {
             idEstufa: pesquisa[0],
             data: pesquisa[1],
-            temperatura: pesquisa[2],
-            umidade: pesquisa[3]
+            temperatura: parseFloat(pesquisa[2]),
+            umidade: parseFloat(pesquisa[3])
             }
           })
           setdados(dadosMapeados);
+          //console.log(dadosMapeados)
           setDadosGraf(dadosMapeados.reverse());
-          const tempArray = dadosMapeados.map((temperatura) => {return(temperatura.temperatura)});
-          const tempMax = Math.max(...tempArray) + 5;
-          console.log(TempMax)
-          setTempMax(tempMax);
+          
+          ///const tempArray = dadosMapeados.map((temperatura) => {return(temperatura.temperatura)});
+          //const tempMax = Math.max(...tempArray) + 5;
+          //setTempMaxGraf(tempMax);
           const pag = dados.length - 5  
           setPag(pag)
           const ultDado = dados[0] 
@@ -120,11 +129,17 @@ export default function EstufaProfile({route}) {
   
     useEffect(() => {
       if(loaded){ 
-        const dadosGraf = dados.slice(pag, pag + 5);
-        setDadosGraf(dadosGraf);
+        //Antes havia um sistema de paginação do grafico dividindo em graficos menores
+        //const dadosGraf = dados.slice(pag, pag + 5);
+        //setDadosGraf(dadosGraf);
         const tempArray = dadosGraf.map(({ temperatura }) => temperatura);
-        const tempMax = Math.max(...tempArray) + 1;
-        setTempMax(tempMax);
+        const tempMax1 = Math.max(...tempArray) + 5;
+        //Caso a temperatura alvo for maior que temperatura maxima adquirida sera ela + 5, se não inverte
+        const tempMaxGraf = tempMax1 > tempAlvoFloat ?  tempMax1 : tempAlvoFloat + 5;  
+        const TempMin = Math.min(...tempArray) - 5;
+        console.log("teste" +tempMaxGraf);
+        setTempMaxGraf(tempMaxGraf);
+        setTempMin(TempMin);
       }
     }, [pag, dados]);
     //const { temp, umid,caution} = props
@@ -164,7 +179,7 @@ export default function EstufaProfile({route}) {
                   <Swiper loop={false}>
                     {/* Swiper 1 = Temp Graf */}
                     <View style={{marginTop: -30}}>
-                     <VictoryChart domainPadding={{x: [0, 0], y: 5}} theme={VictoryTheme.material}> 
+                     <VictoryChart domainPadding={{x: [0, 0], y: 40}} domain={{y: [TempMin, TempMaxGraf]}}  theme={VictoryTheme.material}> 
                           <VictoryAxis
                             dependentAxis
                             tickFormat={(x) => `${x}°C`}
@@ -176,8 +191,8 @@ export default function EstufaProfile({route}) {
                           /> 
                         <VictoryArea
                           data={dadosGraf}
-                          x={"data"}
-                          y={"temperatura"}
+                          x="data"
+                          y="temperatura"
                           interpolation="natural"
                           animate = {{
                             onLoad:{
@@ -186,6 +201,21 @@ export default function EstufaProfile({route}) {
                           }}
                           style={{ data: { fill: 'url(#gradient)' }, labels: {fontSize: 15}}}
                         />
+                          <VictoryLine 
+                            data={[{x: 0, y: tempAlvoFloat}, {x: 20, y: tempAlvoFloat}]}
+                            key={1}
+                            style={{data: { stroke: "green", strokeDasharray: "5,5" } }}
+                          />
+                          <VictoryLine 
+                            data={[{x: 0, y: tempAlvoFloat - 3}, {x: 20, y: tempAlvoFloat - 3}]}
+                            key={1}
+                            style={{data: { stroke: "red", strokeDasharray: "5,5" } }}
+                          />
+                          <VictoryLine 
+                            data={[{x: 0, y: tempAlvoFloat + 3}, {x: 20, y: tempAlvoFloat + 3}]}
+                            key={1}
+                            style={{data: { stroke: "red", strokeDasharray: "5,5" } }}
+                          />
                           <Defs>
                             <LinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
                               <Stop offset="10%" stopColor="orange" stopOpacity={1} />
@@ -193,10 +223,12 @@ export default function EstufaProfile({route}) {
                             </LinearGradient>
                         </Defs> 
                       </VictoryChart> 
+                      <Text style={style.faixa}>Temperatura Alvo: {tempAlvoFloat}ºC</Text>
+                      <Text style={style.faixa}>Faixa Temperatura Ideal: {tempAlvoFloat - 3}ºC - {tempAlvoFloat + 3}ºC </Text>
                     </View>
                     {/* Swiper 2 = Umid Graf */}
                     <View style={{marginTop: -30}}>
-                     <VictoryChart domainPadding={{x: [0, 0], y: 15}} theme={VictoryTheme.material}> 
+                     <VictoryChart domainPadding={{x: [0, 0], y: 0}} domain={{y : [0,100]}} theme={VictoryTheme.material}> 
                           <VictoryAxis
                             dependentAxis
                             tickFormat={(x) => `${x}°%`}
@@ -208,8 +240,8 @@ export default function EstufaProfile({route}) {
                           /> 
                         <VictoryArea
                           data={dadosGraf}
-                          x={"data"}
-                          y={"umidade"}
+                          x="data"
+                          y="umidade"
                           interpolation="natural"
                           animate = {{
                             onLoad:{
@@ -218,6 +250,12 @@ export default function EstufaProfile({route}) {
                           }}
                           style={{ data: { fill: 'url(#gradient)' }, labels: {fontSize: 15}}}
                         />
+                        {/* Linha para a Umidade ideal */}
+                        <VictoryLine 
+                            data={[{x: 0, y: parseFloat(umidAlvo)}, {x: 20, y: parseFloat(umidAlvo)}]}
+                            key={1}
+                            style={{data: { stroke: "cyan", strokeDasharray: "5,5" } }}
+                          />
                           <Defs>
                             <LinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
                               <Stop offset="10%" stopColor="blue" stopOpacity={1} />
@@ -225,6 +263,8 @@ export default function EstufaProfile({route}) {
                             </LinearGradient>
                         </Defs> 
                       </VictoryChart> 
+
+                      <Text style={style.faixa}>Umidade desejada é maior que {umidAlvo}%</Text>
                     </View>
                     {/* Swiper 3 = Tabela */}
                     <View>
@@ -257,5 +297,10 @@ const style = StyleSheet.create({
   dados: {
     flex:1, 
     textAlign:"center",
+  },
+  faixa: {
+    marginTop: 5,
+    marginHorizontal:  20, 
+    fontSize: 15,
   }
 })

@@ -3,19 +3,19 @@ import { useState, useEffect } from 'react';
 
 
 export type NotificationBallProps = {
-    Status : "Working" | "Suspended" | "Off" | "Maintenance"
+    Status : "Ideal" | "Ajustando" | "Desligado" | "Manutenção"
 } 
 
 export default function NotificationBall({Status} : NotificationBallProps) {
     const [color, setColor] = useState<string>()
     useEffect(() => {
-        if (Status === "Working")
+        if (Status === "Ideal")
           setColor('rgba(0, 128, 0, 1)');
-        else if (Status === "Suspended")
+        else if (Status === "Ajustando")
           setColor('rgba(255, 173, 45, 1)');
-        else if (Status === "Off")
+        else if (Status === "Desligado")
           setColor('rgba(255, 0, 0, 1)');
-        else if (Status === "Maintenance")
+        else if (Status === "Manutenção")
           setColor('rgba(0, 0, 0, 0.4)');
       }, [Status]);
 
