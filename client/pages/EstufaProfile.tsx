@@ -68,15 +68,13 @@ export default function EstufaProfile({route}) {
           //console.log(dadosMapeados)
           setDadosGraf(dadosMapeados.reverse());
           
-          ///const tempArray = dadosMapeados.map((temperatura) => {return(temperatura.temperatura)});
-          //const tempMax = Math.max(...tempArray) + 5;
-          //setTempMaxGraf(tempMax);
-          const pag = dados.length - 5  
-          setPag(pag)
+          //const pag = dados.length - 5  
+          //setPag(pag)
           const ultDado = dados[0] 
           setUltTemp(ultDado[2])
           setUltUmid(ultDado[3])
           setLoaded(true)
+
        }).catch((error : any) => {console.log(error)})
        navigation.setOptions({
         title: "Estufa: " + nome,
@@ -141,7 +139,7 @@ export default function EstufaProfile({route}) {
         setTempMaxGraf(tempMaxGraf);
         setTempMin(TempMin);
       }
-    }, [pag, dados]);
+    }, [pag, dados, loaded]);
     //const { temp, umid,caution} = props
     
     return (
@@ -179,7 +177,7 @@ export default function EstufaProfile({route}) {
                   <Swiper loop={false}>
                     {/* Swiper 1 = Temp Graf */}
                     <View style={{marginTop: -30}}>
-                     <VictoryChart domainPadding={{x: [0, 0], y: 40}} domain={{y: [TempMin, TempMaxGraf]}}  theme={VictoryTheme.material}> 
+                     <VictoryChart domainPadding={{x: [0, 0], y: 20}} domain={{y: [TempMin, TempMaxGraf]}}  theme={VictoryTheme.material}> 
                           <VictoryAxis
                             dependentAxis
                             tickFormat={(x) => `${x}°C`}
