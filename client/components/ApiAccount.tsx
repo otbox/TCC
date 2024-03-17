@@ -38,7 +38,8 @@ export const RemoveAccount = async (props: ApiProps) => {
 
 export const isLoginAccount = (props: ApiProps): Promise<UserType> => {
     const { name, passwd } = props;
-    const address = "https://otboxserver.000webhostapp.com/Connect.php";
+    const address = "https://otbox.serv00.net/Estufa/public_html/Connect.php";
+    console.log(address)
     return new Promise<UserType>((resolve, reject) => {
       axios
         .post(address, {
@@ -49,8 +50,7 @@ export const isLoginAccount = (props: ApiProps): Promise<UserType> => {
           }
         })
         .then((response) => {
-          console.log(response.data)
-          if (!response.data) {
+          if (response.data == 0) {
             reject(-1);
           } else {
             const user1: UserType = {
@@ -61,7 +61,6 @@ export const isLoginAccount = (props: ApiProps): Promise<UserType> => {
               ativo: response.data[0][5],
               idEmpresa: response.data[0][1],
             };
-            console.log(user1.ativo)
             if(user1.ativo == 0){reject(-2)}
             resolve(user1);
           }

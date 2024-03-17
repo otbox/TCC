@@ -50,7 +50,7 @@ export default function EstufaProfile({route}) {
     const [ultTemp, setUltTemp] = useState<number>(ultTemp0)
     const [ultUmid, setUltUmid] = useState<number>(ultUmid0)
 
-    const address = "https://otboxserver.000webhostapp.com/Connect.php";
+    const address = "https://otbox.serv00.net/Estufa/public_html/Connect.php";
 
 
     useEffect(() => {

@@ -21,7 +21,7 @@ export default function Home() {
     const bb = useAppSelector(SelectUser);
     const [Reload, SetReload] = useState(1)
     const [currentDate, setCurrentDate] = useState(new Date());
-    const address = "https://otboxserver.000webhostapp.com/Connect.php";
+    const address = "https://otbox.serv00.net/Estufa/public_html/Connect.php";
     useEffect(() => {
         axios.post(address, {
             Operation: 'getAllEstufas',
