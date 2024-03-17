@@ -1,27 +1,16 @@
-# React + TypeScript + Vite
+# Estufa dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**_PTBR_**
 
-Currently, two official plugins are available:
+O site foi feiro com react + vite, utilizando tambem do Material UI, seju funcionammento utiliza-se do axios fazendo post para um servidor PHP, a qual utilziando um banco de dados MYSql, devolve para o site a resposta
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+O site tem a função de gerenciar a temperatura e humidade das estufas sendo utilzado apenas por usuários *administradores*, pois assim apenas em um terminal pode-se mudar a configurações, sendo um mecanismo de segurança. Além disso ele permite a criação, alterar e excluir usuários. 
 
-## Expanding the ESLint configuration
+Assim como o App, tem as funções de gerenciamento de estufa, visualizar graficos e  tabelas, status, e nº de dias de cultivo, exportar para pdf os registros, controlar a tempertura e humidade ideal da Estufa.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+Usuário: teste 
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+Senha: 123
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Website: https://estufa-5414b.web.app

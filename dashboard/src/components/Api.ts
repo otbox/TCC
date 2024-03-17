@@ -1,5 +1,5 @@
 import axios from "axios";
-const address = "https://otboxserver.000webhostapp.com/Connect.php";
+const address = "https://otbox.serv00.net/Estufa/public_html/Connect.php";
 
 //Sistema de comunicação com o site do 000webhost, utilizando do post para a definição dos eventos
 
